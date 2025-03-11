@@ -21,13 +21,15 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 
+import actiondriver.ActionDriver;
 import utils.ExtentReportManager;
 import utils.Log;
 
 public class BaseTest {
-	protected static Properties prop;
-	protected WebDriver driver;
+	protected static ActionDriver actionDriver;
 	protected static ExtentReports extent;
+	protected static Properties prop;
+	protected static WebDriver driver;
 	protected ExtentTest test;
 
 	@BeforeSuite
@@ -48,6 +50,9 @@ public class BaseTest {
 		initDriver();
 		// setup browser configurations
 		configureBrowser();
+		if (actionDriver == null) {
+			actionDriver = new ActionDriver(driver);
+		}
 	}
 
 	@AfterMethod
@@ -62,8 +67,21 @@ public class BaseTest {
 			Log.info("Terminating driver!");
 			driver.quit();
 		}
+		driver = null;
+		actionDriver = null;
 	}
 
+	public static WebDriver getWebDriver() {
+		return driver;
+	}
+	
+	public static ActionDriver getActionDriver() {
+		if (actionDriver == null) {
+			Log.error("Action driver is not initialized");
+			throw new IllegalStateException("Action driver is not initialized");
+		}
+		return actionDriver;
+	}
 	public void loadConfig() throws IOException {
 		Log.info("Loading configuration");
 		prop = new Properties();
@@ -71,6 +89,14 @@ public class BaseTest {
 		prop.load(fis);
 	}
 
+	public void staticWait(int seconds) {
+		LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
+	}
+	
+	public static Properties getProp() {
+		return prop;
+	}
+	
 	private void initDriver() {
 		String browser = prop.getProperty("browser");
 		Log.info("Initializing the driver...");
@@ -104,11 +130,5 @@ public class BaseTest {
 		driver.get(prop.getProperty("url"));
 	}
 	
-	public void staticWait(int seconds) {
-		LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
-	}
-	
-	public static Properties getProp() {
-		return prop;
-	}
+
 }

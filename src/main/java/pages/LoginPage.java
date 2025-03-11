@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import actiondriver.ActionDriver;
+import base.BaseTest;
 
 public class LoginPage {
 	private ActionDriver actionDriver;
@@ -14,7 +15,7 @@ public class LoginPage {
 	private By loginButton = By.xpath("//*[@id=\"main\"]/div/div/div/div[2]/div[1]/div/form/div[3]/button");
 	private By errorMessage = By.id("error-message");
 	public LoginPage(WebDriver driver) {
-		this.actionDriver = new ActionDriver(driver);
+		this.actionDriver = BaseTest.getActionDriver();
 	}
 
 	public void login(String username, String password) {
