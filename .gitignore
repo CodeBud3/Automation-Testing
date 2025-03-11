@@ -177,5 +177,6 @@ hs_err_pid*
 /logs
 
 #reports and screenshots
-/reports
-/screenshots
+reports/
+screenshots/
+test-output/

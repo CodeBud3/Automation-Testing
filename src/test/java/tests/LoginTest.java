@@ -1,6 +1,7 @@
 package tests;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import base.BaseTest;
@@ -10,17 +11,20 @@ import utils.Log;
 
 
 public class LoginTest extends BaseTest {
-
-	@Test
-	public void testValidLogin() {
+	
+	private LoginPage loginPage;
+	@BeforeMethod
+	public void setupPage() {
 		test = ExtentReportManager.createTest("Login test");
 		test.info("Navigating to login page");
-		LoginPage loginPage = new LoginPage(driver);
-		test.info("Adding Credentials");
-		loginPage.enterUsername("admin@yourstore.com");
-		loginPage.enterPassword("admin");
-		test.info("Clicking login button");
-		loginPage.clickLogin();
+		loginPage = new LoginPage(driver);
+	}
+	
+	@Test
+	public void testValidLogin() {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.login("admin@yourstore.com", "admin");
 		Log.info("Validating title");
 		test.info("Validating title");
 		Assert.assertEquals(driver.getTitle(), "Just a moment...");
@@ -28,14 +32,9 @@ public class LoginTest extends BaseTest {
 	
 	@Test
 	public void testInvalidLogin() {
-		test = ExtentReportManager.createTest("Login test");
-		test.info("Navigating to login page");
-		LoginPage loginPage = new LoginPage(driver);
-		test.info("Adding Credentials");
-		loginPage.enterUsername("admin123@yourstore.com");
-		loginPage.enterPassword("admin123");
-		test.info("Clicking login button");
-		loginPage.clickLogin();
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.login("admin@yourstore.com", "admin");
 		Log.info("Validating title");
 		test.info("Validating title");
 		Assert.assertEquals(driver.getTitle(), "Just a moment..");

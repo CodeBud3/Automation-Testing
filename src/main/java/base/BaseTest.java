@@ -4,6 +4,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -22,15 +24,16 @@ import com.aventstack.extentreports.MediaEntityBuilder;
 import utils.ExtentReportManager;
 import utils.Log;
 
-
 public class BaseTest {
-	protected Properties prop;
+	protected static Properties prop;
 	protected WebDriver driver;
 	protected static ExtentReports extent;
 	protected ExtentTest test;
 
 	@BeforeSuite
-	public void setupReport() {
+	public void setupSuite() throws IOException {
+		// Load configuration file
+		loadConfig();
 		extent = ExtentReportManager.getReportInstance();
 	}
 
@@ -40,20 +43,11 @@ public class BaseTest {
 	}
 
 	@BeforeMethod
-	public void setUp() throws IOException {
-		// Load configuration file
-		setupProperties();
-
+	public void setUp() {
 		// Initialize the web driver based on config.properties
 		initDriver();
-
-		// Implicit Wait
-		int implicitWait = Integer.parseInt(prop.getProperty("implicitWait"));
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
-
-		driver.manage().window().maximize();
-		Log.info("Navigating to URL");
-		driver.get(prop.getProperty("url"));
+		// setup browser configurations
+		configureBrowser();
 	}
 
 	@AfterMethod
@@ -70,33 +64,51 @@ public class BaseTest {
 		}
 	}
 
-	public void setupProperties() throws IOException {
+	public void loadConfig() throws IOException {
 		Log.info("Loading configuration");
 		prop = new Properties();
 		FileInputStream fis = new FileInputStream("src/main/resources/config.properties");
 		prop.load(fis);
 	}
 
-	public void initDriver() {
+	private void initDriver() {
 		String browser = prop.getProperty("browser");
 		Log.info("Initializing the driver...");
 
 		switch (browser.toLowerCase()) {
-			case "chrome": {
-				driver = new ChromeDriver();
-				break;
-			}
-			case "firefox": {
-				driver = new FirefoxDriver();
-				break;
-			}
-			case "edge": {
-				driver = new EdgeDriver();
-				break;
-			}
-			default: {
-				throw new IllegalArgumentException("Browser not supported: " + browser);
-			}
+		case "chrome": {
+			driver = new ChromeDriver();
+			break;
 		}
+		case "firefox": {
+			driver = new FirefoxDriver();
+			break;
+		}
+		case "edge": {
+			driver = new EdgeDriver();
+			break;
+		}
+		default: {
+			throw new IllegalArgumentException("Browser not supported: " + browser);
+		}
+		}
+	}
+
+	private void configureBrowser() {
+		// Implicit Wait
+		int implicitWait = Integer.parseInt(prop.getProperty("implicitWait"));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
+
+		driver.manage().window().maximize();
+		Log.info("Navigating to URL");
+		driver.get(prop.getProperty("url"));
+	}
+	
+	public void staticWait(int seconds) {
+		LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
+	}
+	
+	public static Properties getProp() {
+		return prop;
 	}
 }
