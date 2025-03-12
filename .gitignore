@@ -180,3 +180,4 @@ hs_err_pid*
 reports/
 screenshots/
 test-output/
+/bin/
