@@ -55,7 +55,7 @@ public class BaseTest {
 		}
 	}
 
-	@AfterMethod
+	/*@AfterMethod
 	public void tearDown(ITestResult result) {
 		// capture screenshots for failed cases
 		if (result.getStatus() == ITestResult.FAILURE) {
@@ -69,7 +69,31 @@ public class BaseTest {
 		}
 		driver = null;
 		actionDriver = null;
-	}
+	}*/
+	
+	@AfterMethod
+    public void tearDown(ITestResult result) {
+        // Capture screenshots for both success and failure cases
+        if (result.getStatus() == ITestResult.SUCCESS) {
+            String screenshotPath = ExtentReportManager.captureScreenshot(driver, result.getMethod().getMethodName());
+            Log.info("Test passed. Screenshot captured at: " + screenshotPath);
+            test.pass("Test passed. Check screenshot",
+                    MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+        } else if (result.getStatus() == ITestResult.FAILURE) {
+            String screenshotPath = ExtentReportManager.captureScreenshot(driver, result.getMethod().getMethodName());
+            Log.info("Test failed. Screenshot captured at: " + screenshotPath);
+            test.fail("Test failed. Check screenshot",
+                    MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+        }
+
+        // Cleanup
+        if (driver != null) {
+            Log.info("Terminating driver!");
+            driver.quit();
+        }
+        driver = null;
+        actionDriver = null;
+    }
 
 	public static WebDriver getWebDriver() {
 		return driver;
