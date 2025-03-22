@@ -51,6 +51,22 @@ public class ActionDriver {
 			return "";
 		}
 	}
+	public boolean compareInputAttribute(By by, String attribute, String expectedText) {
+		try {
+			waitForElementToBeVisible(by);
+			String actualText = driver.findElement(by).getDomProperty(attribute);
+			if (expectedText.equals(actualText)) {
+				Log.info("Text are matching: " + actualText + "=" + expectedText);
+				return true;
+			}
+			Log.info("Text are not matching: " + actualText + "!=" + expectedText);
+			return false;
+
+		} catch (Exception e) {
+			Log.error("Error while comparing text: " + e.getMessage());
+			return false;
+		}
+	}
 
 	public boolean compareText(By by, String expectedText) {
 		try {

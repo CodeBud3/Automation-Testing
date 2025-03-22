@@ -103,7 +103,6 @@ public class LoginTest extends BaseTest {
 		Thread.sleep(6000);
 		Assert.assertNotEquals(driver.getCurrentUrl(), "https://to-do-ggau.onrender.com/");
 	}
-	// Bug need fixing
 	@Test
 	public void testCaseSensitivityEmail() throws InterruptedException {
 		Log.info("Logging in...");
