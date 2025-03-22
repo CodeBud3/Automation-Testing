@@ -21,22 +21,25 @@ public class LoginTest extends BaseTest {
 	}
 	
 	@Test
-	public void testValidLogin() {
+	public void testLoginWithInvalidCred() {
 		Log.info("Logging in...");
 		test.info("Logging in...");
-		loginPage.login("admin@yourstore.com", "admin");
-		Log.info("Validating title");
-		test.info("Validating title");
-		Assert.assertEquals(driver.getTitle(), "Just a moment...");
+		loginPage.populateLoginFields("admin@yourstore.com", "admin");
+		loginPage.clickLoginButton();
+		Log.info("Validating Sign in error message");
+		test.info("Validating Sign in error message");
+		Assert.assertTrue(loginPage.isErrorMessagedDisplayed("signInFormErrorContainer"));
+		Assert.assertTrue(loginPage.verifyErrorMessage("signInFormErrorMessage", "Incorrect email or password."));
 	}
 	
 	@Test
-	public void testInvalidLogin() {
+	public void testLoginWithEmptyCred() {
 		Log.info("Logging in...");
 		test.info("Logging in...");
-		loginPage.login("admin@yourstore.com", "admin");
-		Log.info("Validating title");
-		test.info("Validating title");
-		Assert.assertEquals(driver.getTitle(), "Just a moment..");
+		loginPage.clickLoginButton();
+		Log.info("Validating Error messages");
+		test.info("Validating Error messages");
+		Assert.assertTrue(loginPage.verifyErrorMessage("emailErrorMessage", "Email is required."));
+		Assert.assertTrue(loginPage.verifyErrorMessage("passwordErrorMessage", "Password is required."));
 	}
 }
