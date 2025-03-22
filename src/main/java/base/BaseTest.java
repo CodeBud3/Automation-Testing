@@ -1,6 +1,5 @@
 package base;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Properties;
@@ -22,6 +21,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 
 import actiondriver.ActionDriver;
+import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;
 
@@ -34,8 +34,6 @@ public class BaseTest {
 
 	@BeforeSuite
 	public void setupSuite() throws IOException {
-		// Load configuration file
-		loadConfig();
 		extent = ExtentReportManager.getReportInstance();
 	}
 
@@ -106,23 +104,14 @@ public class BaseTest {
 		}
 		return actionDriver;
 	}
-	public void loadConfig() throws IOException {
-		Log.info("Loading configuration");
-		prop = new Properties();
-		FileInputStream fis = new FileInputStream("src/main/resources/config.properties");
-		prop.load(fis);
-	}
 
 	public void staticWait(int seconds) {
 		LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
 	}
-	
-	public static Properties getProp() {
-		return prop;
-	}
+
 	
 	private void initDriver() {
-		String browser = prop.getProperty("browser");
+		String browser = ConfigReader.getProperty("browser");
 		Log.info("Initializing the driver...");
 
 		switch (browser.toLowerCase()) {
@@ -146,12 +135,12 @@ public class BaseTest {
 
 	private void configureBrowser() {
 		// Implicit Wait
-		int implicitWait = Integer.parseInt(prop.getProperty("implicitWait"));
+		int implicitWait = ConfigReader.getIntProperty("implicitWait");
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
 
 		driver.manage().window().maximize();
 		Log.info("Navigating to URL");
-		driver.get(prop.getProperty("url"));
+		driver.get(ConfigReader.getProperty("url"));
 	}
 	
 

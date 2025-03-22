@@ -9,7 +9,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import base.BaseTest;
+import utils.ConfigReader;
 import utils.Log;
 
 public class ActionDriver {
@@ -18,7 +18,7 @@ public class ActionDriver {
 
 	public ActionDriver(WebDriver driver) {
 		this.driver = driver;
-		int explicitWait = Integer.parseInt(BaseTest.getProp().getProperty("explicitWait"));
+		int explicitWait = ConfigReader.getIntProperty("explicitWait");
 		this.wait = new WebDriverWait(driver, Duration.ofSeconds(explicitWait));
 	}
 

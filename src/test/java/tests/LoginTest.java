@@ -34,6 +34,17 @@ public class LoginTest extends BaseTest {
 		Assert.assertEquals(driver.getCurrentUrl(), "https://to-do-ggau.onrender.com/");
 	}
 	@Test
+	public void testLoginWithInvalidCred() {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.populateLoginFields("admin@yourstore.com", "admin");
+		loginPage.clickLoginButton();
+		Log.info("Validating Sign in error message");
+		test.info("Validating Sign in error message");
+		Assert.assertTrue(loginPage.isErrorMessagedDisplayed("signInFormErrorContainer"));
+		Assert.assertTrue(loginPage.verifyErrorMessage("signInFormErrorMessage", "Incorrect email or password."));
+	}
+	@Test
 	public void testInvalidEmail() throws InterruptedException {
 		Log.info("Logging in...");
 		test.info("Logging in...");
@@ -42,6 +53,17 @@ public class LoginTest extends BaseTest {
 		test.info("Validating title");
 		Thread.sleep(6000);
 		Assert.assertNotEquals(driver.getCurrentUrl(), "https://to-do-ggau.onrender.com/");
+
+	}
+	@Test
+	public void testLoginWithEmptyCred() {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.clickLoginButton();
+		Log.info("Validating Error messages");
+		test.info("Validating Error messages");
+		Assert.assertTrue(loginPage.verifyErrorMessage("emailErrorMessage", "Email is required."));
+		Assert.assertTrue(loginPage.verifyErrorMessage("passwordErrorMessage", "Password is required."));
 	}
 	@Test
 	public void testInvalidPassword() throws InterruptedException  {
