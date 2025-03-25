@@ -24,6 +24,7 @@ import actiondriver.ActionDriver;
 import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;
+import utils.ApiRequestHandler;
 
 public class BaseTest {
 	protected static ActionDriver actionDriver;
@@ -38,8 +39,9 @@ public class BaseTest {
 	}
 
 	@AfterSuite
-	public void teardownReport() {
+	public void teardownReport() throws Exception {
 		extent.flush();
+		ApiRequestHandler.deleteUser("punith7760kumar@gmail.com");
 	}
 
 	@BeforeMethod
@@ -110,7 +112,7 @@ public class BaseTest {
 	}
 
 	
-	private void initDriver() {
+	public void initDriver() {
 		String browser = ConfigReader.getProperty("browser");
 		Log.info("Initializing the driver...");
 
@@ -133,7 +135,7 @@ public class BaseTest {
 		}
 	}
 
-	private void configureBrowser() {
+	public void configureBrowser() {
 		// Implicit Wait
 		int implicitWait = ConfigReader.getIntProperty("implicitWait");
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));

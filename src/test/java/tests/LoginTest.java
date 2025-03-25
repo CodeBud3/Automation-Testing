@@ -3,11 +3,11 @@ package tests;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import base.BaseTest;
 import pages.LoginPage;
 import utils.ExtentReportManager;
 import utils.Log;
+
 
 import java.lang.reflect.Method;
 
@@ -30,8 +30,8 @@ public class LoginTest extends BaseTest {
 		test.info("Logging in...");
 		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
 		loginPage.clickLoginButton();
-		Log.info("Validating Error messages");
-		test.info("Validating Error messages");
+		Log.info("Validating Sign in messages");
+		test.info("Validating Sign in messages");
 		Assert.assertTrue(loginPage.verifyMessage("logoutButton", "Logout john"));
 	}
 	@Test
@@ -40,10 +40,10 @@ public class LoginTest extends BaseTest {
 		test.info("Logging in...");
 		loginPage.populateLoginFields("JOHN.DOE@EXAMPLE.COM", "Password123!");
 		loginPage.clickLoginButton();
-		Log.info("Validating Error messages");
-		test.info("Validating Error messages");
+		Log.info("Validating Sign in messages");
+		test.info("Validating Sign in messages");
 		Assert.assertTrue(loginPage.verifyMessage("logoutButton", "Logout john"));
-	}*/
+	}
 	@Test
 	public void testPassVisToggle() {
 		Log.info("Logging in...");
@@ -52,15 +52,34 @@ public class LoginTest extends BaseTest {
 		loginPage.verifyToggleMessage("password");
 		loginPage.clickpassVisToggle();
 		loginPage.verifyToggleMessage("text");
-		Log.info("Validating Error messages");
-		test.info("Validating Error messages");
+		Log.info("Validating text");
+		test.info("Validating text");
 		Assert.assertTrue(loginPage.verifyToggleMessage("text"));
-		//Assert.assertTrue(loginPage.verifyMessage("passwordVisibilityToggle", "text"));
 	}
 	
 	
-	
-	
+	@Test
+	public void testCaseSensitivityEmail() {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.populateLoginFields("john.doe+test@example.com", "Password123!");
+		loginPage.clickLoginButton();
+		Log.info("Validating Sign in messages");
+		test.info("Validating Sign in messages");
+		Assert.assertTrue(loginPage.verifyMessage("logoutButton", "Logout john"));
+	}
+	*/
+	@Test
+	public void testSignInWithRememberMe() {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
+		loginPage.clickrememberMeButton();
+		loginPage.clickLoginButton();
+		Log.info("Validating Error messages");
+		test.info("Validating Error messages");		
+		Assert.assertTrue(loginPage.verifyMessage("logoutButton", "Logout john"));
+	}
 	
 	
 	
@@ -159,5 +178,50 @@ public class LoginTest extends BaseTest {
 	        test.info("Validating error message for attempt " + attempt);
 		Assert.assertTrue(loginPage.verifyErrorMessage("signInFormErrorMessage", "Incorrect email or password."));
 		}
+	}
+	@Test
+	public void testSqlInjectionAttemptPass() {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.populateLoginFields("john.doe@example.com", "'1'='1'");
+		loginPage.clickLoginButton();
+		Log.info("Validating Error messages");
+		test.info("Validating Error messages");
+		Assert.assertTrue(loginPage.verifyErrorMessage("passwordErrorMessage", "Enter a valid password address."));
+	}
+	@Test
+	public void testXSSAttemptPass() {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.populateLoginFields("john.doe@example.com", "<script>alert('XSS')</script>");
+		loginPage.clickLoginButton();
+		Log.info("Validating Error messages");
+		test.info("Validating Error messages");
+		Assert.assertTrue(loginPage.verifyErrorMessage("passwordErrorMessage", "Enter a valid password address."));
+	}
+	@Test
+	public void testMaxEmailAndPassLength() {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.populateLoginFields("averylongemailaddresswithmultiplecharactersandrandomtexttotestvalidationpurpose@exampledomainfor.com", "A1b2C3d4E5f6G7h8I9j0K!L@M#N$O%P^Q&R*S(T)U_V+W=X-Y[Z]{a}b|c~d:e;f");
+		loginPage.clickLoginButton();
+		Log.info("Validating Error messages");
+		test.info("Validating Error messages");
+		Assert.assertTrue(loginPage.verifyMessage("logoutButton", "Logout FirstNameJonathanAlexanderMaximillianChristopherAn"));
+	}
+	@Test
+	public void testSignInWithGoogleAuth() throws InterruptedException {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.clickgoogleAuthButton();
+		loginPage.googleLoginEmailFields("punith7760kumar@gmail.com");
+		Thread.sleep(1000);
+		loginPage.clickgoogleSignInbutton();
+		Thread.sleep(1000);
+		loginPage.googleLoginPassFields("7760502966punitH");
+		loginPage.clickgoogleSignInbutton();
+		Log.info("Validating Error messages");
+		test.info("Validating Error messages");		
+		Assert.assertTrue(loginPage.verifyMessage("logoutButton", "Logout john"));
 	}*/
 }

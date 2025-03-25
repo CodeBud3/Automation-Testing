@@ -23,9 +23,17 @@ public class LoginPage {
 	private By signUpButton = AttributeHelper.getElementByAttribute("a", "signup-link");
 	private By navSignUpButton = AttributeHelper.getElementByAttribute("button","nav-signup-link");
 	private By registrationPage = AttributeHelper.getElementByAttribute("div","signup-card-title");
-	private By passwordVisibilityToggle = AttributeHelper.getElementByAttribute("button", "password-visibility");
+	private By passVisToggle = AttributeHelper.getElementByAttribute("button", "password-visibility");
+	private By passVisToggleText = AttributeHelper.getElementByAttribute("input", "field-password");
+	private By rememberMeButton = AttributeHelper.getElementByAttribute("button", "field-rememberme");
+	private By googleAuthButton = AttributeHelper.getElementByAttribute("button", "signin-google-auth");
+	private By googleEmailTextBox = By.xpath("//input[@id='identifierId']");
+	private By googleNextButton = By.xpath("//button[@class='VfPpkd-LgbsSe VfPpkd-LgbsSe-OWXEXe-k8QpJ VfPpkd-LgbsSe-OWXEXe-dgl2Hf nCP5yc AjY5Oe DuMIQc LQeN7 BqKGqe Jskylb TrZEUc lw1w4b']");
+	private By googlePasswordTextBox = By.xpath("//input[@name='Passwd']");
 	
-
+	
+	
+	
 	public LoginPage(WebDriver driver) {
 		this.actionDriver = BaseTest.getActionDriver();
 	}
@@ -44,9 +52,27 @@ public class LoginPage {
         }
     }
 	
+	public By getMessageLocator(String fieldName) {
+        try {
+            // Use reflection to access the private field
+            Field field = this.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true); // Allow access to private fields
+            return (By) field.get(this);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Locator not found for: " + fieldName, e);
+        }
+    }
+	
 	public void populateLoginFields(String username, String password) {
 		actionDriver.enterText(emailTextBox, username);
 		actionDriver.enterText(passwordTextBox, password);
+	}
+	
+	public void googleLoginEmailFields(String googleemail) {
+	actionDriver.enterText(googleEmailTextBox, googleemail);
+	}
+	public void googleLoginPassFields(String googlepassword) {
+		actionDriver.enterText(googlePasswordTextBox, googlepassword);
 	}
 	
 	public void clickLoginButton() {
@@ -62,8 +88,18 @@ public class LoginPage {
 		actionDriver.click(navSignUpButton);
 	}
 	public void clickpassVisToggle() {
-		actionDriver.click(passwordVisibilityToggle);
+		actionDriver.click(passVisToggle);
 	}
+	public void clickrememberMeButton() {
+		actionDriver.click(rememberMeButton);
+	}
+	public void clickgoogleAuthButton() {
+		actionDriver.click(googleAuthButton);
+	}
+	public void clickgoogleSignInbutton() {
+		actionDriver.click(googleNextButton);
+	}
+	
 
 	public boolean isErrorMessagedDisplayed(String fieldName) {
 		return actionDriver.isDisplayed(getErrorMessage(fieldName));
@@ -77,29 +113,22 @@ public class LoginPage {
 		return actionDriver.compareText(getErrorMessage(fieldName), expectedErrorMessage);
 	}
 	
-
-	public By getMessageLocator(String fieldName) {
-        try {
-            // Use reflection to access the private field
-            Field field = this.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true); // Allow access to private fields
-            return (By) field.get(this);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Locator not found for: " + fieldName, e);
-        }
-    }
-	  public boolean isMessageDisplayed(String fieldName) {
+	public boolean isMessageDisplayed(String fieldName) {
 	        return actionDriver.isDisplayed(getMessageLocator(fieldName));
-	    }
+	}
 
 	    // Method to get the text of a message
-	    public String getMessageText(String fieldName) {
+	public String getMessageText(String fieldName) {
 	        return actionDriver.getText(getMessageLocator(fieldName));
-	    }
+	}
 
 	    // Method to verify a message against an expected message
-	    public Boolean verifyMessage(String fieldName, String expectedMessage) {
+	public Boolean verifyMessage(String fieldName, String expectedMessage) {
 	        return actionDriver.compareText(getMessageLocator(fieldName), expectedMessage);
-	    }
+	}
+	
+	public Boolean verifyToggleMessage(String expectedPassword) {
+			return actionDriver.compareInputAttribute(passVisToggleText, "type", expectedPassword);
+	}
 
 }
