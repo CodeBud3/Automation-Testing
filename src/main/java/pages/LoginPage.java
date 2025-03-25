@@ -17,8 +17,14 @@ public class LoginPage {
 	private By loginButton = AttributeHelper.getElementByAttribute("button", "button-submit");
 	private By emailErrorMessage =  AttributeHelper.getElementByAttribute("p","errormsg-email");
 	private By passwordErrorMessage = AttributeHelper.getElementByAttribute("p", "errormsg-password");
-	private By signInFormErrorContainer = AttributeHelper.getElementByAttribute("div","sign-in-form-errors");
+	private By signInFormErrorContainer = AttributeHelper.getElementByAttribute("div", "sign-in-form-errors");
 	private By signInFormErrorMessage = AttributeHelper.getElementByAttribute("div","sign-in-form-errors", "/ul/li");
+	private By logoutButton = AttributeHelper.getElementByAttribute("button", "nav-logout");
+	private By signUpButton = AttributeHelper.getElementByAttribute("a", "signup-link");
+	private By navSignUpButton = AttributeHelper.getElementByAttribute("button","nav-signup-link");
+	private By registrationPage = AttributeHelper.getElementByAttribute("div","signup-card-title");
+	private By passwordVisibilityToggle = AttributeHelper.getElementByAttribute("button", "password-visibility");
+	
 
 	public LoginPage(WebDriver driver) {
 		this.actionDriver = BaseTest.getActionDriver();
@@ -46,6 +52,18 @@ public class LoginPage {
 	public void clickLoginButton() {
 		actionDriver.click(loginButton);
 	}
+	public void clickLogoutButton() {
+		actionDriver.click(logoutButton);
+	}
+	public void clickSignUpButton() {
+		actionDriver.click(signUpButton);
+	}
+	public void clickNavSignUpButton() {
+		actionDriver.click(navSignUpButton);
+	}
+	public void clickpassVisToggle() {
+		actionDriver.click(passwordVisibilityToggle);
+	}
 
 	public boolean isErrorMessagedDisplayed(String fieldName) {
 		return actionDriver.isDisplayed(getErrorMessage(fieldName));
@@ -58,4 +76,30 @@ public class LoginPage {
 	public Boolean verifyErrorMessage(String fieldName, String expectedErrorMessage) {
 		return actionDriver.compareText(getErrorMessage(fieldName), expectedErrorMessage);
 	}
+	
+
+	public By getMessageLocator(String fieldName) {
+        try {
+            // Use reflection to access the private field
+            Field field = this.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true); // Allow access to private fields
+            return (By) field.get(this);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException("Locator not found for: " + fieldName, e);
+        }
+    }
+	  public boolean isMessageDisplayed(String fieldName) {
+	        return actionDriver.isDisplayed(getMessageLocator(fieldName));
+	    }
+
+	    // Method to get the text of a message
+	    public String getMessageText(String fieldName) {
+	        return actionDriver.getText(getMessageLocator(fieldName));
+	    }
+
+	    // Method to verify a message against an expected message
+	    public Boolean verifyMessage(String fieldName, String expectedMessage) {
+	        return actionDriver.compareText(getMessageLocator(fieldName), expectedMessage);
+	    }
+
 }
