@@ -84,7 +84,7 @@ public class ActionDriver {
 			return false;
 		}
 	}
-
+/*
 	public boolean isDisplayed(By by) {
 		try {
 			waitForElementToBeVisible(by);
@@ -94,6 +94,17 @@ public class ActionDriver {
 			Log.error("Error while comparing text: " + e.getMessage());
 			return false;
 		}
+	}*/
+	public boolean isDisplayed(By by) {
+	    try {
+	        waitForElementToBeVisible(by);
+	        boolean displayed = driver.findElement(by).isDisplayed();
+	        Log.info("Element " + by + " is displayed: " + displayed);
+	        return displayed;
+	    } catch (Exception e) {
+	        Log.info("Element " + by + " is not displayed: " + e.getMessage());
+	        return false;
+	    }
 	}
 
 	private void waitForElementToBeClickable(By by) {

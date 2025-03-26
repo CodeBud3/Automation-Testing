@@ -6,8 +6,10 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.ITestResult;
@@ -32,6 +34,7 @@ public class BaseTest {
 	protected static Properties prop;
 	protected static WebDriver driver;
 	protected ExtentTest test;
+	 private String userDataDir; // Store the user data directory for the test
 
 	@BeforeSuite
 	public void setupSuite() throws IOException {
@@ -41,7 +44,7 @@ public class BaseTest {
 	@AfterSuite
 	public void teardownReport() throws Exception {
 		extent.flush();
-		ApiRequestHandler.deleteUser("punith7760kumar@gmail.com");
+		//ApiRequestHandler.deleteUser("puni.kumar143@outlook.com");
 	}
 
 	@BeforeMethod
@@ -70,7 +73,7 @@ public class BaseTest {
 		driver = null;
 		actionDriver = null;
 	}*/
-	
+	/*
 	@AfterMethod
     public void tearDown(ITestResult result) {
         // Capture screenshots for both success and failure cases
@@ -94,6 +97,27 @@ public class BaseTest {
         driver = null;
         actionDriver = null;
     }
+	*/
+	@AfterMethod
+	public void tearDown(ITestResult result) {
+	    if (result.getStatus() == ITestResult.SUCCESS) {
+	        Log.info("Test passed.");
+	        test.pass("Test passed.");
+	    } else if (result.getStatus() == ITestResult.FAILURE) {
+	        String screenshotPath = ExtentReportManager.captureScreenshot(driver, result.getMethod().getMethodName());
+	        Log.info("Test failed. Screenshot captured at: " + screenshotPath);
+	        test.fail("Test failed. Check screenshot",
+	                MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+	    }
+
+	    if (driver != null) {
+	        Log.info("Terminating driver!");
+	        driver.quit();
+	    }
+	    driver = null;
+	    actionDriver = null;
+	    userDataDir = null; // Reset for the next test
+	}
 
 	public static WebDriver getWebDriver() {
 		return driver;
@@ -118,9 +142,23 @@ public class BaseTest {
 
 		switch (browser.toLowerCase()) {
 		case "chrome": {
-			driver = new ChromeDriver();
-			break;
-		}
+            ChromeOptions options = new ChromeOptions();
+            options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
+            options.addArguments("--disable-blink-features=AutomationControlled");
+            options.addArguments("--disable-extensions");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+            options.addArguments("--start-maximized");
+            options.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36");
+            // Use a unique user data directory for each test, but preserve it within the test
+            if (userDataDir == null) {
+                userDataDir = System.getProperty("java.io.tmpdir") + "/chrome-user-data-" + System.currentTimeMillis();
+            }
+            options.addArguments("--user-data-dir=" + userDataDir);
+            driver = new ChromeDriver(options);
+            ((JavascriptExecutor) driver).executeScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})");
+            break;
+        }
 		case "firefox": {
 			driver = new FirefoxDriver();
 			break;
