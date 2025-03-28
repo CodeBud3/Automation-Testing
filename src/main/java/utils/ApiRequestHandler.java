@@ -12,7 +12,7 @@ public class ApiRequestHandler {
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL+"/api/auth/admin/delete/"+email))
+                .uri(URI.create(BASE_URL+"/api/users/admin/delete/"+email))
                 .DELETE()
                 .header("Authorization", "Bearer "+ token)
                 .build();
