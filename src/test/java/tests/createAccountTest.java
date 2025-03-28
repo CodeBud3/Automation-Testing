@@ -24,7 +24,7 @@ public class createAccountTest extends BaseTest {
 		test.info("Navigating to login page");
 		createAccount = new createAccount(driver);
 		
-	}/*
+	}
 	@Test
 	public void testSuccessfulAccountCreation() throws InterruptedException {
 		Log.info("Logging in...");
@@ -109,8 +109,6 @@ public class createAccountTest extends BaseTest {
 		Thread.sleep(5000);
 		Assert.assertEquals(driver.getCurrentUrl(), "https://to-do-ggau.onrender.com/");
 	}
-	*/
-	/*
 	@Test
 	public void testEmptyFirstName() throws InterruptedException {
 		Log.info("Logging in...");
@@ -313,5 +311,5 @@ public class createAccountTest extends BaseTest {
 		test.info("Validating title");
 		Thread.sleep(5000);
 		Assert.assertTrue(createAccount.verifyErrorMessageSingUpPage("Email is required."));
-	}*/
+	}
 }
