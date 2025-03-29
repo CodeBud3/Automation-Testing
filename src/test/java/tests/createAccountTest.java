@@ -12,7 +12,7 @@ import utils.Log;
 import java.lang.reflect.Method;
 
 
-public class createAccountTest extends BaseTest {
+public class CreateAccountTest extends BaseTest {
 	
 	private createAccount createAccount;
 	@BeforeMethod
@@ -207,7 +207,7 @@ public class createAccountTest extends BaseTest {
 		test.info("Validating title");
 		Thread.sleep(5000);
 		Assert.assertTrue(createAccount.verifyErrorMessageSingUpPage("Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
-	}*/
+	}
 	@Test
 	public void testVerifyToggle() throws InterruptedException {
 		Log.info("Logging in...");
@@ -221,7 +221,7 @@ public class createAccountTest extends BaseTest {
 		Log.info("Validating title");
 		test.info("Validating title");
 		Assert.assertTrue(createAccount.verifyToggleMessage("text"));
-	}/*
+	}
 	@Test
 	public void testSpecialCharacterFirstName() throws InterruptedException {
 		Log.info("Logging in...");
