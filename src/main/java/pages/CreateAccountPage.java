@@ -7,51 +7,44 @@ import utils.Log;
 import actiondriver.ActionDriver;
 
 
-
-public class LoginPage {
+public class CreateAccountPage {
 	private WebDriver driver;
 	private ActionDriver actionDriver;
 	
 
-	public LoginPage(WebDriver driver) {
+	public CreateAccountPage(WebDriver driver) {
 		this.driver = driver;
 		this.actionDriver = new ActionDriver(driver); // Initialize with the provided driver
 	}
+	
 	// Locators
-
 	public enum ElementLocators {
-		// Buttons and Links (from ButtonType)
-		LOGIN("Login Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
+		
+		FIRST_NAME("First Name Text Box", AttributeHelper.getElementByAttribute("input", "field-firstname")),
+		LAST_NAME("Last Name Text Box", AttributeHelper.getElementByAttribute("input", "field-lastname")),
+		EMAIL_ID("Email Id Text Box", AttributeHelper.getElementByAttribute("input", "field-email")),
+		PASSWORD("Password Text Box", AttributeHelper.getElementByAttribute("input", "field-password")),
+		CONFIRM_PASSWORD("Confirm Password Text Box", AttributeHelper.getElementByAttribute("Input", "field-confirmpassword")),
+		TNC_CHECK_BOX("Terms And Condition Check Box", AttributeHelper.getElementByAttribute("button", "field-tnc")),		
+		CREATE_ACCOUNT("Create Account Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
+		SIGN_IN("Sign In Button", AttributeHelper.getElementByAttribute("a", "signin-link")),
+		NAV_LOGIN("Navigate Login Button", AttributeHelper.getElementByAttribute("button", "nav-signin-link")),
+		PASSWORD_TOGGLE("Toggle Password Button", AttributeHelper.getElementByAttribute("button", "password-visibility")),
+		CONFIRM_PASSWORD_TOGGLE("Toggle Confirm Password Button", AttributeHelper.getElementByAttribute("button", "confirmpassword-visibility")),
 		LOGOUT("Logout Button", AttributeHelper.getElementByAttribute("button", "nav-logout")),
-		SIGN_UP("Sign Up Button", AttributeHelper.getElementByAttribute("a", "signup-link")),
-		NAV_SIGN_UP("Nav Sign Up Button", AttributeHelper.getElementByAttribute("button", "nav-signup-link")),
-		PASS_VIS_TOGGLE("Password Visibility Toggle",
-				AttributeHelper.getElementByAttribute("button", "password-visibility")),
-		REMEMBER_ME("Remember Me Button", AttributeHelper.getElementByAttribute("button", "field-rememberme")),
-		GOOGLE_AUTH("Google Auth Button", AttributeHelper.getElementByAttribute("button", "signin-google-auth")),
-		MICROSOFT_AUTH("Microsoft Auth Button", AttributeHelper.getElementByAttribute("button", "signin-ms-auth")),
-		FORGOT_PASSWORD("Forgot Password Link",
-				AttributeHelper.getElementByAttribute("a", "forgot-password-link")),
-		SIGN_IN_PAGE("Sign In Page Message", AttributeHelper.getElementByAttribute("div", "signin-card-title")),
-
-		// Text Fields (from EnterText)
-		EMAIL_TEXT("Email Text Box", AttributeHelper.getElementByAttribute("input", "field-email")),
-		PASSWORD_TEXT("Password Text Box", AttributeHelper.getElementByAttribute("input", "field-password")),
-
-		// Other Elements (for completeness)
-		EMAIL_MESSAGE("Email Error Message", AttributeHelper.getElementByAttribute("p", "errormsg-email")),
-		PASSWORD_MESSAGE("Password Error Message", AttributeHelper.getElementByAttribute("p", "errormsg-password")),
-		SIGN_IN_FORM_CONTAINER("Sign In Form Error Container",
-				AttributeHelper.getElementByAttribute("div", "sign-in-form-errors")),
-		SIGN_IN_FORM_MESSAGE("Sign In Form Error Message",
-				AttributeHelper.getElementByAttribute("div", "sign-in-form-errors", "/ul/li")),
-		REGISTRATION_PAGE("Registration Page", AttributeHelper.getElementByAttribute("div", "signup-card-title")),
-		PASSWORD_VISIBILITY_TOGGLE("Password Visibility Toggle Text",
-				AttributeHelper.getElementByAttribute("input", "field-password")),
-		FORGOT_PASSWORD_PAGE("Forgot Password Page", AttributeHelper.getElementByAttribute("div", "forgot-password-card-title")),
-		GOOGLE_SIGN_IN("Google Sign In page", By.xpath("//*[@id=\"headingText\"]/span")),
-		MICROSOFT_SIGN_IN("Microsoft Sign In page", By.xpath("//*[@id=\"loginHeader\"]/div"));
-
+		SIGN_IN_PAGE("Navigate to Sign In Page", AttributeHelper.getElementByAttribute("div", "signin-card-title")),
+		
+		//GOOGLE_AUTH("Google Auth Button", AttributeHelper.getElementByAttribute("button", "signin-google-auth")),
+		//MICROSOFT_AUTH("Microsoft Auth Button", AttributeHelper.getElementByAttribute("button", "signin-ms-auth")),
+		//VER_ERROR_MESSAGE("Verify Error Message Sing Up", AttributeHelper.getElementByAttribute("p", "")),
+		ERROR_MESSAGE("Error Message", AttributeHelper.getElementByAttribute("div", "sign-up-form-errors", "/ul/li")),
+		VER_ERROR_FIRST_NAME("Verify Error First Name", AttributeHelper.getElementByAttribute("p", "errormsg-firstname")),
+		VER_ERROR_LAST_NAME("Verify Error Last Name", AttributeHelper.getElementByAttribute("p", "errormsg-lastname")),
+		VER_ERROR_EMAIL_ID("Verify Error Email", AttributeHelper.getElementByAttribute("p", "errormsg-email")),
+		VER_ERROR_PASSWORD("Verify Error Password", AttributeHelper.getElementByAttribute("p", "errormsg-password")),
+		VER_ERROR_CONFIRM_PASSWORD("Verify Error Confirm Password", AttributeHelper.getElementByAttribute("p", "errormsg-confirmpassword")),
+		VER_ERROR_TNC_CHECK_BOX("Verify Error AttributeHelper", AttributeHelper.getElementByAttribute("p", "errormsg-tnc"));
+		
 		private final String name;
 		private final By locator;
 
@@ -116,9 +109,12 @@ public class LoginPage {
 		performAction(actionType, element, null);
 	}
 	
-	public void populateLoginFields(String username, String password) {
-		performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_TEXT, username);
-		performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD_TEXT, password);
+	public void populateCreateAccountFields(String firstname, String lastname, String email, String password, String confirmpassword) {
+		performAction(ActionType.ENTER_TEXT, ElementLocators.FIRST_NAME, firstname);
+		performAction(ActionType.ENTER_TEXT, ElementLocators.LAST_NAME, lastname);
+		performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_ID, email);
+		performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
+		performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, confirmpassword);
 	}
 
 	
@@ -145,5 +141,5 @@ public class LoginPage {
 	        Log.error("Failed to verify " + attribute + " attribute for " + element.getName() + ": " + e.getMessage());
 	        throw e;
 	    }
-	}	
+	}
 }

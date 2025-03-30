@@ -51,6 +51,22 @@ public class ActionDriver {
 			return "";
 		}
 	}
+	public boolean compareInputAttribute(By by, String attribute, String expectedText) {
+		try {
+			waitForElementToBeVisible(by);
+			String actualText = driver.findElement(by).getDomProperty(attribute);
+			if (expectedText.equals(actualText)) {
+				Log.info("Text are matching: " + actualText + "=" + expectedText);
+				return true;
+			}
+			Log.info("Text are not matching: " + actualText + "!=" + expectedText);
+			return false;
+
+		} catch (Exception e) {
+			Log.error("Error while comparing text: " + e.getMessage());
+			return false;
+		}
+	}
 
 	public boolean compareText(By by, String expectedText) {
 		try {
@@ -68,7 +84,7 @@ public class ActionDriver {
 			return false;
 		}
 	}
-
+/*
 	public boolean isDisplayed(By by) {
 		try {
 			waitForElementToBeVisible(by);
@@ -78,6 +94,17 @@ public class ActionDriver {
 			Log.error("Error while comparing text: " + e.getMessage());
 			return false;
 		}
+	}*/
+	public boolean isDisplayed(By by) {
+	    try {
+	        waitForElementToBeVisible(by);
+	        boolean displayed = driver.findElement(by).isDisplayed();
+	        Log.info("Element " + by + " is displayed: " + displayed);
+	        return displayed;
+	    } catch (Exception e) {
+	        Log.info("Element " + by + " is not displayed: " + e.getMessage());
+	        return false;
+	    }
 	}
 
 	private void waitForElementToBeClickable(By by) {
