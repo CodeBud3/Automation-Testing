@@ -212,7 +212,7 @@ public class CreateAccountTest extends BaseTest {
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
 	}
 	@Test
-	public void testPasswordBelowMinimum()  {
+	public void testPasswordTooShort()  {
 		Log.info("Navigating to Creating Account Page...");
 		test.info("Navigating to Creating Account Page...");
 		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@example.com", "Pas123!", "Pas123!");
