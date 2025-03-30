@@ -6,12 +6,9 @@ import utils.AttributeHelper;
 import utils.Log;
 import actiondriver.ActionDriver;
 
-
-
 public class ForgotPasswordPage {
 	private WebDriver driver;
 	private ActionDriver actionDriver;
-	
 
 	public ForgotPasswordPage(WebDriver driver) {
 		this.driver = driver;
@@ -20,18 +17,22 @@ public class ForgotPasswordPage {
 	// Locators
 
 	public enum ElementLocators {
-		
-		
-		
-		
+
 		SIGN_UP("Sign Up Button", AttributeHelper.getElementByAttribute("button", "nav-signup-link")),
 		LOGIN_PAGE("Return To Login Page Link", AttributeHelper.getElementByAttribute("a", "login-link")),
 		EMAIL_FIELD("Email Field Text Box", AttributeHelper.getElementByAttribute("input", "field-email")),
 		SIGN_IN_PAGE("Sign In Page Message", AttributeHelper.getElementByAttribute("div", "signin-card-title")),
-		CREATE_ACCOUNT_PAGE("Create Account Page", AttributeHelper.getElementByAttribute("div", "signup-card-title")),		
-		PASSWORD_RESET("Password Reset Confirm", AttributeHelper.getElementByAttribute("button", "alert-confirm"));
-		
-		
+		CREATE_ACCOUNT_PAGE("Create Account Page", AttributeHelper.getElementByAttribute("div", "signup-card-title")),
+		PASSWORD_RESET("Password Reset Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
+		CONFIRM_RESET("Password Reset Confirm", AttributeHelper.getElementByAttribute("button", "alert-confirm")),
+		PASSWORD("Password Text Box", AttributeHelper.getElementByAttribute("input", "field-password")),
+		CONFIRM_PASSWORD("Confirm Password Text Box", AttributeHelper.getElementByAttribute("Input", "field-confirmpassword")),
+		PASSWORD_TOGGLE("Toggle Password Button", AttributeHelper.getElementByAttribute("button", "password-visibility")),
+		CONFIRM_PASSWORD_TOGGLE("Toggle Confirm Password Button", AttributeHelper.getElementByAttribute("button", "confirmpassword-visibility")),
+		SAVE_PASSWORD("Save Password Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
+		VER_ERROR_EMAIL_ID("Verify Error Email ID", AttributeHelper.getElementByAttribute("p", "errormsg-email")),
+		VER_ERROR_PASSWORD("Verify Error Password", AttributeHelper.getElementByAttribute("p", "errormsg-password")),
+		VER_ERROR_CONFIRM_PASSWORD("Verify Error Confirm Password", AttributeHelper.getElementByAttribute("p", "errormsg-confirmpassword"));
 
 		private final String name;
 		private final By locator;
@@ -97,29 +98,29 @@ public class ForgotPasswordPage {
 		performAction(actionType, element, null);
 	}
 
-	
 	public boolean isMessageDisplayed(ElementLocators element) {
-	    Log.info("Checking if " + element.getName() + " is displayed...");
-	    return actionDriver.isDisplayed(element.getLocator());
+		Log.info("Checking if " + element.getName() + " is displayed...");
+		return actionDriver.isDisplayed(element.getLocator());
 	}
-	
+
 	public String getMessageText(ElementLocators element) {
-	    Log.info("Retrieving text from " + element.getName() + "...");
-	    return actionDriver.getText(element.getLocator());
+		Log.info("Retrieving text from " + element.getName() + "...");
+		return actionDriver.getText(element.getLocator());
 	}
+
 	public Boolean verifyMessage(ElementLocators element, String expectedMessage) {
-	    Log.info("Verifying message for " + element.getName() + ": expected '" + expectedMessage + "'");
-	    return actionDriver.compareText(element.getLocator(), expectedMessage);
+		Log.info("Verifying message for " + element.getName() + ": expected '" + expectedMessage + "'");
+		return actionDriver.compareText(element.getLocator(), expectedMessage);
 	}
-	
 
 	public Boolean verifyAttribute(ElementLocators element, String attribute, String expectedValue) {
-	    try {
-	        Log.info("Verifying " + attribute + " attribute for " + element.getName() + ": expected '" + expectedValue + "'");
-	        return actionDriver.compareInputAttribute(element.getLocator(), attribute, expectedValue);
-	    } catch (Exception e) {
-	        Log.error("Failed to verify " + attribute + " attribute for " + element.getName() + ": " + e.getMessage());
-	        throw e;
-	    }
-	}	
+		try {
+			Log.info("Verifying " + attribute + " attribute for " + element.getName() + ": expected '" + expectedValue
+					+ "'");
+			return actionDriver.compareInputAttribute(element.getLocator(), attribute, expectedValue);
+		} catch (Exception e) {
+			Log.error("Failed to verify " + attribute + " attribute for " + element.getName() + ": " + e.getMessage());
+			throw e;
+		}
+	}
 }
