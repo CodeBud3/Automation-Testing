@@ -215,6 +215,7 @@ public class LoginTest extends BaseTest {
 		test.info("Validating Sign in error message");
 		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
 	}
+	
 
 	@Test
 	public void testXSSAttemptPassword() {
@@ -226,6 +227,51 @@ public class LoginTest extends BaseTest {
 		test.info("Validating Sign in error message");
 		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
 	}
+	@Test
+	public void testNavigateToGooleAuth() {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.performAction(ActionType.CLICK, ElementLocators.GOOGLE_AUTH);
+		Log.info("Validating Google Sign In Page");
+		test.info("Validating Microsoft Sign In Page");
+		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.GOOGLE_SIGN_IN, "Sign in"));
+	}
+	@Test
+	public void testNavigateToMicrosoftAuth() {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.performAction(ActionType.CLICK, ElementLocators.MICROSOFT_AUTH);
+		Log.info("Validating Sign in error message");
+		test.info("Validating Sign in error message");
+		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.MICROSOFT_SIGN_IN, "Sign in"));
+	}
+	@Test
+	public void testToolongEmailAndPasswordLength() {
+		Log.info("Logging in...");
+		test.info("Logging in...");
+		loginPage.populateLoginFields(
+				"aaverylongemailaddresswithmultiplecharactersandrandomtexttotestvalidationpurpose@exampledomainfor.com",
+				"A1b2C3d4E5f6G7h8I9j0K!L@M#N$O%P^Q&R*S(T)U_V+W=X-Y[Z]{a}b|c~d:e;fa");
+		loginPage.performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		Log.info("Validating Sign in error message");
+		test.info("Validating Sign in error message");
+		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.EMAIL_MESSAGE, "Email cannot exceed 100 characters."));	
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 //	@Test
 //	public void testSignInWithGoogleAuth() {

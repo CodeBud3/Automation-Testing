@@ -57,21 +57,6 @@ public class BaseTest {
 		}
 	}
 
-	/*@AfterMethod
-	public void tearDown(ITestResult result) {
-		// capture screenshots for failed cases
-		if (result.getStatus() == ITestResult.FAILURE) {
-			String screenshotPath = ExtentReportManager.captureScreenshot(driver, result.getMethod().getMethodName());
-			test.fail("Test failed ... Check screenshot",
-					MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
-		}
-		if (driver != null) {
-			Log.info("Terminating driver!");
-			driver.quit();
-		}
-		driver = null;
-		actionDriver = null;
-	}*/
 	
 	@AfterMethod
     public void tearDown(ITestResult result) {
