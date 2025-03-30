@@ -21,6 +21,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 
 import actiondriver.ActionDriver;
+import utils.ApiRequestHandler;
 import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;
@@ -38,8 +39,11 @@ public class BaseTest {
 	}
 
 	@AfterSuite
-	public void teardownReport() {
+	public void teardownReport() throws Exception {
 		extent.flush();
+		//ApiRequestHandler.deleteUser("Avinash.Noop@example.com");
+		//ApiRequestHandler.deleteUser("longemailaddresswithmultiplecharactersandnumbers1234567890abcdefghijklmnopqrstuvwx@domainexample.com");
+		//ApiRequestHandler.deleteUser("Avinash.Noop+Doddu@example.com");
 	}
 
 	@BeforeMethod

@@ -1,16 +1,10 @@
 package pages;
 
-import java.lang.reflect.Field;
-import java.time.Duration;
-import org.testng.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.AttributeHelper;
 import utils.Log;
 import actiondriver.ActionDriver;
-import base.BaseTest;
 
 
 public class CreateAccountPage {
@@ -22,27 +16,35 @@ public class CreateAccountPage {
 		this.driver = driver;
 		this.actionDriver = new ActionDriver(driver); // Initialize with the provided driver
 	}
+	
 	// Locators
-
 	public enum ElementLocators {
 		
-		FIRST_NAME("First Name Text Box", AttributeHelper.getElementByAttribute("Input", "field-firstname")),
-		LAST_NAME("last Name Text Box", AttributeHelper.getElementByAttribute("Input", "field-lastname")),
-		EMAIL_ID("Email Id Text Box", AttributeHelper.getElementByAttribute("Input", "field-email")),
-		PASSWORD("Password Text Box", AttributeHelper.getElementByAttribute("Input", "field-password")),
+		FIRST_NAME("First Name Text Box", AttributeHelper.getElementByAttribute("input", "field-firstname")),
+		LAST_NAME("Last Name Text Box", AttributeHelper.getElementByAttribute("input", "field-lastname")),
+		EMAIL_ID("Email Id Text Box", AttributeHelper.getElementByAttribute("input", "field-email")),
+		PASSWORD("Password Text Box", AttributeHelper.getElementByAttribute("input", "field-password")),
 		CONFIRM_PASSWORD("Confirm Password Text Box", AttributeHelper.getElementByAttribute("Input", "field-confirmpassword")),
-		CREATE_ACCOUNT("Create Account Button", AttributeHelper.getElementByAttribute("Input", "button-submit")),
-		SIGN_IN("Sign In Button", AttributeHelper.getElementByAttribute("Input", "signin-link")),
-		NAV_LOGIN("Navigate Login Button", AttributeHelper.getElementByAttribute("Input", "nav-signin-link")),
-		PASSWORD_TOGGLE("Toggle Password Button", AttributeHelper.getElementByAttribute("Input", "password-visibility")),
-		CONFIRM_PASSWORD_TOGGLE("Toggle Confirm Password Button", AttributeHelper.getElementByAttribute("Input", "field-confirmpassword")),
-		//VER_ERROR_MESSAGE("Verify Error Message Sing Up", AttributeHelper.getElementByAttribute("Input", "")),
-		VER_ERROR_EMAIL("Verify Error Email", AttributeHelper.getElementByAttribute("Input", "errormsg-firstname"));
-		//ERROR_MESSAGE("Error Message", AttributeHelper.getElementByAttribute("Input", "")),
+		TNC_CHECK_BOX("Terms And Condition Check Box", AttributeHelper.getElementByAttribute("button", "field-tnc")),		
+		CREATE_ACCOUNT("Create Account Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
+		SIGN_IN("Sign In Button", AttributeHelper.getElementByAttribute("a", "signin-link")),
+		NAV_LOGIN("Navigate Login Button", AttributeHelper.getElementByAttribute("button", "nav-signin-link")),
+		PASSWORD_TOGGLE("Toggle Password Button", AttributeHelper.getElementByAttribute("button", "password-visibility")),
+		CONFIRM_PASSWORD_TOGGLE("Toggle Confirm Password Button", AttributeHelper.getElementByAttribute("button", "confirmpassword-visibility")),
+		LOGOUT("Logout Button", AttributeHelper.getElementByAttribute("button", "nav-logout")),
+		SIGN_IN_PAGE("Navigate to Sign In Page", AttributeHelper.getElementByAttribute("div", "signin-card-title")),
 		
+		//GOOGLE_AUTH("Google Auth Button", AttributeHelper.getElementByAttribute("button", "signin-google-auth")),
+		//MICROSOFT_AUTH("Microsoft Auth Button", AttributeHelper.getElementByAttribute("button", "signin-ms-auth")),
+		//VER_ERROR_MESSAGE("Verify Error Message Sing Up", AttributeHelper.getElementByAttribute("p", "")),
+		ERROR_MESSAGE("Error Message", AttributeHelper.getElementByAttribute("div", "sign-up-form-errors", "/ul/li")),
+		VER_ERROR_FIRST_NAME("Verify Error First Name", AttributeHelper.getElementByAttribute("p", "errormsg-firstname")),
+		VER_ERROR_LAST_NAME("Verify Error Last Name", AttributeHelper.getElementByAttribute("p", "errormsg-lastname")),
+		VER_ERROR_EMAIL_ID("Verify Error Email", AttributeHelper.getElementByAttribute("p", "errormsg-email")),
+		VER_ERROR_PASSWORD("Verify Error Password", AttributeHelper.getElementByAttribute("p", "errormsg-password")),
+		VER_ERROR_CONFIRM_PASSWORD("Verify Error Confirm Password", AttributeHelper.getElementByAttribute("p", "errormsg-confirmpassword")),
+		VER_ERROR_TNC_CHECK_BOX("Verify Error AttributeHelper", AttributeHelper.getElementByAttribute("p", "errormsg-tnc"));
 		
-	
-
 		private final String name;
 		private final By locator;
 
@@ -107,14 +109,12 @@ public class CreateAccountPage {
 		performAction(actionType, element, null);
 	}
 	
-	public void populateLoginFields(String firstname, String lastname, String email, String password, String confirmpassword, String createaccount) {
+	public void populateCreateAccountFields(String firstname, String lastname, String email, String password, String confirmpassword) {
 		performAction(ActionType.ENTER_TEXT, ElementLocators.FIRST_NAME, firstname);
 		performAction(ActionType.ENTER_TEXT, ElementLocators.LAST_NAME, lastname);
 		performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_ID, email);
 		performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
 		performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, confirmpassword);
-		performAction(ActionType.ENTER_TEXT, ElementLocators.CREATE_ACCOUNT, createaccount);
-		
 	}
 
 	
@@ -141,5 +141,5 @@ public class CreateAccountPage {
 	        Log.error("Failed to verify " + attribute + " attribute for " + element.getName() + ": " + e.getMessage());
 	        throw e;
 	    }
-	}	
+	}
 }
