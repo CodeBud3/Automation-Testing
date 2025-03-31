@@ -32,8 +32,14 @@ public class ForgotPasswordPage {
 		SAVE_PASSWORD("Save Password Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
 		VER_ERROR_EMAIL_ID("Verify Error Email ID", AttributeHelper.getElementByAttribute("p", "errormsg-email")),
 		VER_ERROR_PASSWORD("Verify Error Password", AttributeHelper.getElementByAttribute("p", "errormsg-password")),
-		VER_ERROR_CONFIRM_PASSWORD("Verify Error Confirm Password", AttributeHelper.getElementByAttribute("p", "errormsg-confirmpassword"));
+		VER_ERROR_CONFIRM_PASSWORD("Verify Error Confirm Password", AttributeHelper.getElementByAttribute("p", "errormsg-confirmpassword")),
+		YOPMAIL_EMAIL("Yopmail Email Text Box", By.xpath("//input[@id='login']")),
+		YOPMAIL_LOGIN("Yopmail Login Button", By.xpath("//input[@id='login']")),
+		RESET_PASSWORD_LINK("Reset Password Link", By.xpath("//a[normalize-space()='here']"));
+		
 
+		
+		
 		private final String name;
 		private final By locator;
 
@@ -122,5 +128,17 @@ public class ForgotPasswordPage {
 			Log.error("Failed to verify " + attribute + " attribute for " + element.getName() + ": " + e.getMessage());
 			throw e;
 		}
+	}
+
+	public void navigateToResetLink(String resetUrl) {
+	    Log.info("Navigating to password reset link: " + resetUrl);
+	    driver.get(resetUrl);
+	}
+
+	public void resetPassword(String newPassword) {
+	    Log.info("Resetting password...");
+	    performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, newPassword);
+	    performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, newPassword);
+	    performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
 	}
 }

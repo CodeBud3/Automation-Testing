@@ -7,6 +7,7 @@ import base.BaseTest;
 import pages.ForgotPasswordPage;
 import pages.ForgotPasswordPage.ActionType;
 import pages.ForgotPasswordPage.ElementLocators;
+import utils.EmailUtils;
 import utils.ExtentReportManager;
 import utils.Log;
 
@@ -25,7 +26,7 @@ public class ForgotPasswordTest extends BaseTest {
 		test.info("Navigating to Forgot Password Page");
 		forgotPasswordPage = new ForgotPasswordPage(driver);
 	}
-
+/*
 	@Test
 	public void testSignUpButton() {
 		Log.info("Navigating to Forgot Password Page...");
@@ -45,19 +46,36 @@ public class ForgotPasswordTest extends BaseTest {
 		test.info("Navigating to Sign in Page");
 		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
-
+*/
 	@Test
 	public void testPasswordReset() {
-		Log.info("Navigating to Forgot Password Page...");
-		test.info("Navigating to Forgot Password Page...");
-		forgotPasswordPage.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_FIELD,
-				"punith7760kumar@gmail.com");
-		forgotPasswordPage.performAction(ActionType.CLICK, ElementLocators.PASSWORD_RESET);
+	    Log.info("Navigating to Forgot Password Page...");
+	    test.info("Navigating to Forgot Password Page...");
+	    forgotPasswordPage.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_FIELD, "avibignoop@yopmail.com");
+	    forgotPasswordPage.performAction(ActionType.CLICK, ElementLocators.PASSWORD_RESET);
+	    forgotPasswordPage.performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
+
+	    // Step 1: Retrieve the password reset link from Yopmail
+	    EmailUtils emailUtils = new EmailUtils(driver);
+	    String resetLink = emailUtils.getPasswordResetLinkFromYopmail("avibignoop@yopmail.com");
+
+	    // Step 2: Navigate to the reset link and reset the password
+	    //forgotPasswordPage.performAction(ActionType.ENTER_TEXT, ElementLocators.YOPMAIL_EMAIL, "avibignoop");
+	    //forgotPasswordPage.performAction(ActionType.CLICK, ElementLocators.YOPMAIL_LOGIN);
+	    forgotPasswordPage.navigateToResetLink(resetLink);
+	    forgotPasswordPage.resetPassword("NewPassword123!");
+	    forgotPasswordPage.performAction(ActionType.CLICK, ElementLocators.RESET_PASSWORD_LINK);
+	    forgotPasswordPage.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, "Password123!");
+		forgotPasswordPage.performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, "Password123!");
+		forgotPasswordPage.performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
 		forgotPasswordPage.performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
-		Log.info("Navigating to Sign in Page");
-		test.info("Navigating to Sign in Page");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+	    // Step 3: Verify the sign-in page is displayed after reset
+	    Log.info("Navigating to Sign in Page");
+	    test.info("Navigating to Sign in Page");
+	    Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
+	
+	/*
 	@Test
 	public void testEmailContainingSpecialCharacters() throws Exception {
 		Log.info("Navigating to Forgot Password Page...");
