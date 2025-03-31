@@ -181,3 +181,4 @@ reports/
 screenshots/
 test-output/
 /bin/
+**/secret.properties
