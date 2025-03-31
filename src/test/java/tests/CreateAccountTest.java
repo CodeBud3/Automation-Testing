@@ -5,8 +5,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import base.BaseTest;
 import pages.CreateAccountPage;
-import pages.CreateAccountPage.ActionType;
-import pages.CreateAccountPage.ElementLocators;
+import enums.ActionTypes.ActionType;
+import enums.CreateAccountLocatorEnum.ElementLocators;
 import utils.ApiRequestHandler;
 import utils.ExtentReportManager;
 import utils.Log;
@@ -33,8 +33,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testSuccessfulAccountCreation() throws Exception {
 		createAccountPage.populateCreateAccountFields("Avinash", "Noop", "Avinash.Noop@example.com", "Password123!", "Password123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");		
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"));
@@ -44,8 +44,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testMaximumFieldLengths() throws Exception  {
 		createAccountPage.populateCreateAccountFields("FirstNameWithMaxLengthForTestingABCDEFGHIJABCDEFAA", "LastNameWithMaxLengthForTestingABCDEFGHIJABCDEFGAA", "longemailaddresswithmultiplecharactersandnumbers1234567890abcdefghijklmnopqrstuvwx@domainexample.com", "ApplebananaCherrydogLemonfishGrapeHorseiglooJuice7!xyz1ABCD1234A", "ApplebananaCherrydogLemonfishGrapeHorseiglooJuice7!xyz1ABCD1234A");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.LOGOUT, "Logout FirstNameWithMaxLengthForTestingABCDEFGHIJABCDEFAA"));
@@ -54,7 +54,7 @@ public class CreateAccountTest extends BaseTest {
 		
 	@Test
 	public void testNavigateToSignInByLink()  {
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.SIGN_IN);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.SIGN_IN);
 		Log.info("Validating Sign Up Page");
 		test.info("Validating Sign Up Page");
 		Assert.assertTrue(createAccountPage.isMessageDisplayed(ElementLocators.SIGN_IN_PAGE));
@@ -62,7 +62,7 @@ public class CreateAccountTest extends BaseTest {
 	}
 	@Test
 	public void testNavigateToLoginButton()  {
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.NAV_LOGIN);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.NAV_LOGIN);
 		Log.info("Validating Sign Up Page");
 		test.info("Validating Sign Up Page");
 		Assert.assertTrue(createAccountPage.isMessageDisplayed(ElementLocators.SIGN_IN_PAGE));
@@ -71,8 +71,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testMinimumPasswordLength() throws Exception  {
 		createAccountPage.populateCreateAccountFields("Avinash", "NoopDoddu", "Avinash.NoopDoddu@example.com", "Pass123!", "Pass123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"));
@@ -81,8 +81,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testEmailContainingSpecialCharacters() throws Exception {
 		createAccountPage.populateCreateAccountFields("Avinash", "NoopDoddu", "Avinash.Noop+Doddu@example.com", "Password123!", "Password123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"));
@@ -91,7 +91,7 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testEmptyFirstName()  {
 		createAccountPage.populateCreateAccountFields("", "", "", "", "");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, "First name is required."));	
@@ -106,8 +106,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testInvalidEmailFormat()  {
 		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@exampl", "Password123!", "Password123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Enter a valid email address."));
@@ -115,8 +115,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testEmailAlreadyRegistered()  {
 		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@example.com", "Password123!", "Password123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.ERROR_MESSAGE, "Email already registered"));
@@ -124,8 +124,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testPasswordMismatch()  {
 		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@example.com", "Password123!", "Password124!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,"Passwords do not match."));
@@ -133,8 +133,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testSQLInjectionAttemptEmail()  {
 		createAccountPage.populateCreateAccountFields("John", "doe", "'1'='1'", "Password123!", "Password123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Enter a valid email address."));
@@ -142,8 +142,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testXSSAttemptFirstName()  {
 		createAccountPage.populateCreateAccountFields("<script>alert('XSS')</script>", "doe", "john.doe@example.com", "Password123!", "Password123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, "Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
@@ -151,8 +151,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testXSSAttemptLastName()  {
 		createAccountPage.populateCreateAccountFields("John", "<script>alert('XSS')</script>", "john.doe@example.com", "Password123!", "Password123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, "Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
@@ -162,12 +162,12 @@ public class CreateAccountTest extends BaseTest {
 		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@example.com", "Password123!", "Password123!");		
 		Assert.assertTrue(createAccountPage.verifyAttribute(ElementLocators.PASSWORD, "type", "password"),
 				"Expected password field to be type='password' initially");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.PASSWORD_TOGGLE);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.PASSWORD_TOGGLE);
 		Assert.assertTrue(createAccountPage.verifyAttribute(ElementLocators.PASSWORD, "type", "text"),
 				"Expected password field to be type='text' after toggling visibility");
 		Assert.assertTrue(createAccountPage.verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "password"),
 				"Expected password field to be type='password' initially");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CONFIRM_PASSWORD_TOGGLE);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CONFIRM_PASSWORD_TOGGLE);
 		Assert.assertTrue(createAccountPage.verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "text"),
 				"Expected password field to be type='text' after toggling visibility");	
 		Log.info("Validating Account Registration");
@@ -176,8 +176,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testSpecialCharacterFirstName()  {
 		createAccountPage.populateCreateAccountFields("Jöhn", "döe", "john.doe@example.com", "Password123!", "Password123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
@@ -186,8 +186,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testPasswordBelowMinimum()  {
 		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@example.com", "Pas123!", "Pas123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,"Password must be at least 8 characters long."));
@@ -195,8 +195,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testSQLInjectionAttemptPassword()  {
 		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@example.com", "'1'='1'", "'1'='1'");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,"Password must be at least 8 characters long."));
@@ -204,8 +204,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testFirstAndLastNameContainingOnlySpaces()  {
 		createAccountPage.populateCreateAccountFields("  ", "  ", "john.doeA@example.com", "Password123!", "Password123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,"Must be at least 2 characters long."));
@@ -215,8 +215,8 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testMinimumLengthFirstName()  {
 		createAccountPage.populateCreateAccountFields("O", "O", "john.doeA@example.com", "Password123!", "Password123!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,"Must be at least 2 characters long."));
@@ -226,7 +226,7 @@ public class CreateAccountTest extends BaseTest {
 	@Test
 	public void testWeakPassword()  {
 		createAccountPage.populateCreateAccountFields("Joaahnaaaa", "doeaaaa", "john.doaaaaa@example.com", "Abcdef1!", "Abcdef1!");
-		createAccountPage.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
 		

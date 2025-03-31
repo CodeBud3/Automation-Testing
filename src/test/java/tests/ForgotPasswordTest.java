@@ -5,13 +5,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import base.BaseTest;
 import pages.ForgotPasswordPage;
-import pages.ForgotPasswordPage.ActionType;
-import pages.ForgotPasswordPage.ElementLocators;
+
 import utils.ExtentReportManager;
 import utils.Log;
 
 import java.lang.reflect.Method;
-
+import enums.ActionTypes.ActionType;
+import enums.ForgotPasswordLocators.ElementLocators;
 public class ForgotPasswordTest extends BaseTest {
 	// mvn test -Dtest=ForgotPasswordTest
 	private ForgotPasswordPage forgotPasswordPage;
@@ -31,14 +31,14 @@ public class ForgotPasswordTest extends BaseTest {
 	
 	@Test
 	public void testSignUpButton() {
-		forgotPasswordPage.performAction(ActionType.CLICK, ElementLocators.SIGN_UP);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.SIGN_UP);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
 		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.CREATE_ACCOUNT_PAGE, "Create an account"));
 	}
 	@Test
 	public void testLoginPageLink() {
-		forgotPasswordPage.performAction(ActionType.CLICK, ElementLocators.LOGIN_PAGE);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN_PAGE);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
 		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
