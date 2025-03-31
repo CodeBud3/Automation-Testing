@@ -25,12 +25,12 @@ public class ForgotPasswordTest extends BaseTest {
 		test.info("Navigating to Forgot Password Page");
 		forgotPasswordPage = new ForgotPasswordPage(driver);
 		forgotPasswordPage.navigateToForgotPasswordPage();
+		Log.info("Navigating to forgot password");
+		test.info("Navigating to forgot password");
 	}
 	
 	@Test
 	public void testSignUpButton() {
-		Log.info("Logging in...");
-		test.info("Logging in...");
 		forgotPasswordPage.performAction(ActionType.CLICK, ElementLocators.SIGN_UP);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
@@ -38,8 +38,6 @@ public class ForgotPasswordTest extends BaseTest {
 	}
 	@Test
 	public void testLoginPageLink() {
-		Log.info("Logging in...");
-		test.info("Logging in...");
 		forgotPasswordPage.performAction(ActionType.CLICK, ElementLocators.LOGIN_PAGE);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
