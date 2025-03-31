@@ -3,6 +3,7 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import utils.AttributeHelper;
+import utils.ConfigReader;
 import utils.Log;
 import actiondriver.ActionDriver;
 
@@ -16,6 +17,10 @@ public class ForgotPasswordPage {
 	public ForgotPasswordPage(WebDriver driver) {
 		this.driver = driver;
 		this.actionDriver = new ActionDriver(driver); // Initialize with the provided driver
+	}
+	
+	public void navigateToForgotPasswordPage() {
+		driver.get(ConfigReader.getProperty("url") + "/forgot-password");
 	}
 	// Locators
 

@@ -3,6 +3,7 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import utils.AttributeHelper;
+import utils.ConfigReader;
 import utils.Log;
 import actiondriver.ActionDriver;
 
@@ -17,6 +18,9 @@ public class CreateAccountPage {
 		this.actionDriver = new ActionDriver(driver); // Initialize with the provided driver
 	}
 	
+	public void navigateToCreateAccountPage() {
+		driver.get(ConfigReader.getProperty("url") + "/signup");
+	}
 	// Locators
 	public enum ElementLocators {
 		

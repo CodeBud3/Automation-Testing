@@ -24,6 +24,7 @@ public class ForgotPasswordTest extends BaseTest {
 		test = ExtentReportManager.createTest(testMethodName);
 		test.info("Navigating to Forgot Password Page");
 		forgotPasswordPage = new ForgotPasswordPage(driver);
+		forgotPasswordPage.navigateToForgotPasswordPage();
 	}
 	
 	@Test

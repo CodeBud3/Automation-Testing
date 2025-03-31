@@ -24,9 +24,9 @@ public class CreateAccountTest extends BaseTest {
         String testMethodName = method.getName();
         // Set the test title dynamically
         test = ExtentReportManager.createTest(testMethodName);
-		test.info("Navigating to login page");
+		test.info("Navigating to Sign up page");
 		createAccountPage = new CreateAccountPage(driver);
-		
+		createAccountPage.navigateToCreateAccountPage();
 	}
 	@Test
 	public void testSuccessfulAccountCreation() throws Exception {
