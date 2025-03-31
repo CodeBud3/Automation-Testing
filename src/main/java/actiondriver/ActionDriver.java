@@ -9,6 +9,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import enums.ActionTypes.ActionType;
+import enums.LoginPageLocatorEnum.ElementLocators;
+import interfaces.ElementLocator;
 import utils.ConfigReader;
 import utils.Log;
 
@@ -84,17 +87,7 @@ public class ActionDriver {
 			return false;
 		}
 	}
-/*
-	public boolean isDisplayed(By by) {
-		try {
-			waitForElementToBeVisible(by);
-			return driver.findElement(by).isDisplayed();
 
-		} catch (Exception e) {
-			Log.error("Error while comparing text: " + e.getMessage());
-			return false;
-		}
-	}*/
 	public boolean isDisplayed(By by) {
 	    try {
 	        waitForElementToBeVisible(by);
@@ -133,5 +126,40 @@ public class ActionDriver {
 		} catch (Exception e) {
 			Log.error("Failed to scroll to element: "+e.getMessage());
 		}
+	}
+	
+	
+
+	public void performAction(ActionType actionType, ElementLocator element, String value) {
+		try {
+			String logMessage = actionType.getLogPrefix() + " " + element.getName()
+					+ (actionType == ActionType.ENTER_TEXT ? ": " + value : "...");
+			Log.info(logMessage);
+
+			switch (actionType) {
+			case ENTER_TEXT:
+				if (value == null) {
+					throw new IllegalArgumentException("Value cannot be null for ENTER_TEXT action");
+				}
+				enterText(element.getLocator(), value);
+				break;
+			case CLICK:
+				click(element.getLocator());
+				break;
+			default:
+				throw new IllegalArgumentException("Unsupported action type: " + actionType);
+			}
+		} catch (Exception e) {
+			Log.error("Failed to perform " + actionType + " on " + element.getName() + ": " + e.getMessage());
+			throw e;
+		}
+	}
+
+	public void performAction(ActionType actionType, ElementLocator element) {
+		if (actionType == ActionType.ENTER_TEXT) {
+			throw new IllegalArgumentException(
+					"ENTER_TEXT action requires a value; use the overloaded method with a value parameter");
+		}
+		performAction(actionType, element, null);
 	}
 }

@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<suite name="Login Suite">
-	<test name="LoginTests">
+<suite name="Authentication Suite">
+	<test name="Registration Tests">
+		<classes>
+			<class name="tests.CreateAccountTest"></class>
+		</classes>
+	</test>
+	<test name="Login Tests">
 		<classes>
 			<class name="tests.LoginTest"></class>
+		</classes>
+	</test>
+	<test name="Forgot Password Tests">
+		<classes>
+			<class name="tests.ForgotPasswordTest"></class>
 		</classes>
 	</test>
 </suite>
