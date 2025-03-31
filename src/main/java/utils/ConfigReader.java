@@ -7,7 +7,7 @@ import java.util.Properties;
 public class ConfigReader {
     private static Properties properties;
     private static final String CONFIG_FILE_PATH = "src/main/resources/config.properties";
-
+    private static final String SECRETS_FILE_PATH = "src/main/resources/secret.properties";
     // Private constructor to prevent instantiation
     private ConfigReader() {}
 
@@ -18,6 +18,12 @@ public class ConfigReader {
             properties.load(fileInputStream);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load configuration file: " + CONFIG_FILE_PATH, e);
+        }
+        
+        try (FileInputStream fileInputStream = new FileInputStream(SECRETS_FILE_PATH)) {
+            properties.load(fileInputStream);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load configuration file: " + SECRETS_FILE_PATH, e);
         }
     }
 
