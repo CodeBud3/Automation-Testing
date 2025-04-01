@@ -36,7 +36,7 @@ public class LoginTest extends BaseTest {
 		test.info("Validating Successful Sign in");
 		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
 	}
-
+	
 	@Test
 	public void testLoginWithInvalidCred() {
 		loginPage.populateLoginFields("admin@yourstore.com", "admin");

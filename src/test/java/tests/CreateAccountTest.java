@@ -128,7 +128,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,"Passwords do not match."));
+		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,"Passwords do not match."));
 	}
 	@Test
 	public void testSQLInjectionAttemptEmail()  {

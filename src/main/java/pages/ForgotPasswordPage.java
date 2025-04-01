@@ -1,9 +1,13 @@
 package pages;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 import utils.ConfigReader;
 import utils.Log;
 import actiondriver.ActionDriver;
+import enums.ActionTypes.ActionType;
+import enums.CreateAccountLocatorEnum.ElementLocators;
 import interfaces.ElementLocator;
 
 public class ForgotPasswordPage {
@@ -18,6 +22,16 @@ public class ForgotPasswordPage {
 	public void navigateToForgotPasswordPage() {
 		driver.get(ConfigReader.getProperty("url") + "/forgot-password");
 	}
+
+	public void populateForgotPageEmailFields(String email) {
+		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_ID, email);
+	}
+
+	public void populatePasswordRestFields(String password, String confirmpassword) {
+		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
+		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, confirmpassword);
+	}
+
 	// Locators
 
 	public boolean isMessageDisplayed(ElementLocator element) {
@@ -44,5 +58,30 @@ public class ForgotPasswordPage {
 			Log.error("Failed to verify " + attribute + " attribute for " + element.getName() + ": " + e.getMessage());
 			throw e;
 		}
+	}
+
+	public void newInitDriver() {
+		String browser = ConfigReader.getProperty("browser");
+		Log.info("Initializing the driver...");
+
+		switch (browser.toLowerCase()) {
+		case "chrome": {
+			driver = new ChromeDriver();
+			break;
+		}
+		}
+	}
+
+	public void resetPasswordLink() {
+		// Fetch the base URL and token2 from ConfigReader
+		String baseUrl = "https://to-do-ggau.onrender.com"; // Ensure this is defined in config.properties
+		String token = ConfigReader.getProperty("token2"); // Ensure this is defined in secret.properties
+
+		// Construct the full URL with the token
+		String resetPasswordUrl = baseUrl + "/reset-password?token=" + token;
+
+		// Navigate to the constructed URL (assuming driver is available in the test
+		// context)
+		driver.get(resetPasswordUrl); // Add this if you need to navigate to the URL first
 	}
 }
