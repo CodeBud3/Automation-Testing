@@ -8,7 +8,7 @@ import java.net.http.HttpResponse;
 public class ApiRequestHandler {
 	public static void deleteUser(String email) throws Exception {
 		String BASE_URL = ConfigReader.getProperty("backend_url");
-		String token = ConfigReader.getProperty("token");
+		String token = ConfigReader.getProperty("deleteUserToken");
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()

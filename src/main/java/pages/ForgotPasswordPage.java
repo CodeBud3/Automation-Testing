@@ -59,23 +59,10 @@ public class ForgotPasswordPage {
 			throw e;
 		}
 	}
-
-	public void newInitDriver() {
-		String browser = ConfigReader.getProperty("browser");
-		Log.info("Initializing the driver...");
-
-		switch (browser.toLowerCase()) {
-		case "chrome": {
-			driver = new ChromeDriver();
-			break;
-		}
-		}
-	}
-
 	public void resetPasswordLink() {
 		// Fetch the base URL and token2 from ConfigReader
 		String baseUrl = "https://to-do-ggau.onrender.com"; // Ensure this is defined in config.properties
-		String token = ConfigReader.getProperty("token2"); // Ensure this is defined in secret.properties
+		String token = ConfigReader.getProperty("ResetPasswordUserToken"); // Ensure this is defined in secret.properties
 
 		// Construct the full URL with the token
 		String resetPasswordUrl = baseUrl + "/reset-password?token=" + token;
