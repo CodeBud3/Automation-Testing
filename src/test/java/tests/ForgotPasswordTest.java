@@ -130,7 +130,7 @@ public class ForgotPasswordTest extends BaseTest {
 	@Test
 	public void testVerifyToggle() {
 		forgotPasswordPage.resetPasswordLink();
-		forgotPasswordPage.populatePasswordRestFields("Password123!", "ElementLocators");
+		forgotPasswordPage.populatePasswordRestFields("Password123!", "Password123!");
 		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.PASSWORD, "type", "password"),
 				"Expected password field to be type='password' initially");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.PASSWORD_TOGGLE);

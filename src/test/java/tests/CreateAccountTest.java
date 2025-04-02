@@ -213,7 +213,7 @@ public class CreateAccountTest extends BaseTest {
 	}
 	
 	@Test
-	public void testMinimumLengthFirstName()  {
+	public void testMinimumLengthFirstAndLastName()  {
 		createAccountPage.populateCreateAccountFields("O", "O", "john.doeA@example.com", "Password123!", "Password123!");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
