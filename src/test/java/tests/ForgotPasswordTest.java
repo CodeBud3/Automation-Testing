@@ -33,7 +33,7 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.SIGN_UP);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.CREATE_ACCOUNT_PAGE, "Create an account"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.CREATE_ACCOUNT_PAGE, "Create an account"));
 	}
 
 	@Test
@@ -41,7 +41,7 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN_PAGE);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
 
 	@Test
@@ -51,7 +51,7 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
 		Log.info("Navigating to Sign in Page");
 		test.info("Navigating to Sign in Page");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.PASSWORD_RESET);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Email is required."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Email is required."));
 	}
 
 	@Test
@@ -70,7 +70,7 @@ public class ForgotPasswordTest extends BaseTest {
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(
-				forgotPasswordPage.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Enter a valid email address."));
+				actionDriver.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Enter a valid email address."));
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
 		Log.info("Navigating to Registration Page");
 		test.info("Navigating to Registration Page");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.SIGN_UP);
 		Log.info("Navigating to Registration Page");
 		test.info("Navigating to Registration Page");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.CREATE_ACCOUNT_PAGE, "Create an account"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.CREATE_ACCOUNT_PAGE, "Create an account"));
 	}
 
 	@Test
@@ -99,7 +99,7 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN_PAGE);
 		Log.info("Navigating to Sign in Page");
 		test.info("Navigating to Sign in Page");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
 
 	@Test
@@ -110,7 +110,7 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
 		Log.info("Navigating to Sign in Page");
 		test.info("Navigating to Sign in Page");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
 
 	@Test
@@ -122,8 +122,8 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
 
 		Assert.assertTrue(
-				forgotPasswordPage.verifyMessage(ElementLocators.VER_ERROR_PASSWORD, "Password is required."));
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,
+				actionDriver.verifyMessage(ElementLocators.VER_ERROR_PASSWORD, "Password is required."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,
 				"Please confirm your password."));
 	}
 
@@ -131,15 +131,15 @@ public class ForgotPasswordTest extends BaseTest {
 	public void testVerifyToggle() {
 		forgotPasswordPage.resetPasswordLink();
 		forgotPasswordPage.populatePasswordRestFields("Password123!", "ElementLocators");
-		Assert.assertTrue(forgotPasswordPage.verifyAttribute(ElementLocators.PASSWORD, "type", "password"),
+		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.PASSWORD, "type", "password"),
 				"Expected password field to be type='password' initially");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.PASSWORD_TOGGLE);
-		Assert.assertTrue(forgotPasswordPage.verifyAttribute(ElementLocators.PASSWORD, "type", "text"),
+		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.PASSWORD, "type", "text"),
 				"Expected password field to be type='text' after toggling visibility");
-		Assert.assertTrue(forgotPasswordPage.verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "password"),
+		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "password"),
 				"Expected password field to be type='password' initially");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CONFIRM_PASSWORD_TOGGLE);
-		Assert.assertTrue(forgotPasswordPage.verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "text"),
+		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "text"),
 				"Expected password field to be type='text' after toggling visibility");
 	}
 
@@ -150,7 +150,7 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,
 				"Passwords do not match."));
 	}
 
@@ -161,7 +161,7 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
 				"Password must be at least 8 characters long."));
 	}
 
@@ -172,10 +172,9 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
 				"Password must be at least 8 characters long."));
 	}
-
 	@Test
 	public void testPasswordReset() {
 		forgotPasswordPage.resetPasswordLink();
@@ -185,6 +184,6 @@ public class ForgotPasswordTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
 		Log.info("Navigating to Sign in Page");
 		test.info("Navigating to Sign in Page");
-		Assert.assertTrue(forgotPasswordPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
 }

@@ -2,7 +2,6 @@ package pages;
 
 import org.openqa.selenium.WebDriver;
 import utils.ConfigReader;
-import utils.Log;
 import actiondriver.ActionDriver;
 import enums.ActionTypes.ActionType;
 import enums.CreateAccountLocatorEnum;
@@ -29,31 +28,5 @@ public class CreateAccountPage extends CreateAccountLocatorEnum {
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_ID, email);
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, confirmpassword);
-	}
-
-	
-	public boolean isMessageDisplayed(ElementLocators element) {
-	    Log.info("Checking if " + element.getName() + " is displayed...");
-	    return actionDriver.isDisplayed(element.getLocator());
-	}
-	
-	public String getMessageText(ElementLocators element) {
-	    Log.info("Retrieving text from " + element.getName() + "...");
-	    return actionDriver.getText(element.getLocator());
-	}
-	public Boolean verifyMessage(ElementLocators element, String expectedMessage) {
-	    Log.info("Verifying message for " + element.getName() + ": expected '" + expectedMessage + "'");
-	    return actionDriver.compareText(element.getLocator(), expectedMessage);
-	}
-	
-
-	public Boolean verifyAttribute(ElementLocators element, String attribute, String expectedValue) {
-	    try {
-	        Log.info("Verifying " + attribute + " attribute for " + element.getName() + ": expected '" + expectedValue + "'");
-	        return actionDriver.compareInputAttribute(element.getLocator(), attribute, expectedValue);
-	    } catch (Exception e) {
-	        Log.error("Failed to verify " + attribute + " attribute for " + element.getName() + ": " + e.getMessage());
-	        throw e;
-	    }
 	}
 }

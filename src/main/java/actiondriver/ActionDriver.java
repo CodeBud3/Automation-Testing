@@ -162,4 +162,29 @@ public class ActionDriver {
 		}
 		performAction(actionType, element, null);
 	}
+	public boolean isMessageDisplayed(ElementLocator element) {
+		Log.info("Checking if " + element.getName() + " is displayed...");
+		return isDisplayed(element.getLocator());
+	}
+
+	public String getMessageText(ElementLocator element) {
+		Log.info("Retrieving text from " + element.getName() + "...");
+		return getText(element.getLocator());
+	}
+
+	public Boolean verifyMessage(ElementLocator element, String expectedMessage) {
+		Log.info("Verifying message for " + element.getName() + ": expected '" + expectedMessage + "'");
+		return compareText(element.getLocator(), expectedMessage);
+	}
+
+	public Boolean verifyAttribute(ElementLocator element, String attribute, String expectedValue) {
+		try {
+			Log.info("Verifying " + attribute + " attribute for " + element.getName() + ": expected '" + expectedValue
+					+ "'");
+			return compareInputAttribute(element.getLocator(), attribute, expectedValue);
+		} catch (Exception e) {
+			Log.error("Failed to verify " + attribute + " attribute for " + element.getName() + ": " + e.getMessage());
+			throw e;
+		}
+	}
 }

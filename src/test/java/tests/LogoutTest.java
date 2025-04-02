@@ -4,37 +4,50 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import base.BaseTest;
-import pages.LogoutPage;
+import enums.ActionTypes.ActionType;
 import utils.ExtentReportManager;
 import utils.Log;
-
+import pages.LogoutPage;
+import enums.LogoutPageLocatorEnum.ElementLocators;
 import java.lang.reflect.Method;
-import enums.ActionTypes.ActionType;
-import enums.LoginPageLocatorEnum.ElementLocators;
+
 
 public class LogoutTest extends BaseTest {
-	// mvn test -Dtest=LogoutTest
+	
 	private LogoutPage logoutPage;
-
+	// mvn test -Dtest=LogoutTest
 	@BeforeMethod
 	public void setupPage(Method method) {
 		// Use reflection to get the test method name
-		String testMethodName = method.getName();
-		// Set the test title dynamically
-		test = ExtentReportManager.createTest(testMethodName);
-		test.info("Navigating to login page");
+        String testMethodName = method.getName();
+        // Set the test title dynamically
+        test = ExtentReportManager.createTest(testMethodName);
+		test.info("Navigating to Sign up page");
 		logoutPage = new LogoutPage(driver);
-		Log.info("Navigating to login page");
-		test.info("Navigating to login page");
+		logoutPage.navigateToLogoutPage();
+		Log.info("Navigating to Creating Account Page...");
+		test.info("Navigating to Creating Account Page...");
 	}
 	
 	@Test
-	public void testValidLogin() {
+	public void testLogoutPage() {
 		logoutPage.populateLoginFields("john.doe@example.com", "Password123!");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
-		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGOUT);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(logoutPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));	
-	}	
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGOUT);
+		Log.info("Validating Successful Logout");
+		test.info("Validating Successful Logout");
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		}
+//	@Test
+//	public void testDashboardPage() {
+//		logoutPage.populateLoginFields("john.doe@example.com", "Password123!");
+//		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
+//		logoutPage.navigateToLogoutPage();
+//		Log.info("Validating Dashboard Page");
+//		test.info("Validating Dashboard Page");
+//		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+//		}
 }
