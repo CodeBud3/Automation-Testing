@@ -37,7 +37,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");		
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"));
 		ApiRequestHandler.deleteUser("Avinash.Noop@example.com");
 	}
 	
@@ -48,7 +48,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.LOGOUT, "Logout FirstNameWithMaxLengthForTestingABCDEFGHIJABCDEFAA"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout FirstNameWithMaxLengthForTestingABCDEFGHIJABCDEFAA"));
 		ApiRequestHandler.deleteUser("longemailaddresswithmultiplecharactersandnumbers1234567890abcdefghijklmnopqrstuvwx@domainexample.com");
 	}
 		
@@ -57,16 +57,16 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.SIGN_IN);
 		Log.info("Validating Sign Up Page");
 		test.info("Validating Sign Up Page");
-		Assert.assertTrue(createAccountPage.isMessageDisplayed(ElementLocators.SIGN_IN_PAGE));
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(actionDriver.isMessageDisplayed(ElementLocators.SIGN_IN_PAGE));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
 	@Test
 	public void testNavigateToLoginButton()  {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.NAV_LOGIN);
 		Log.info("Validating Sign Up Page");
 		test.info("Validating Sign Up Page");
-		Assert.assertTrue(createAccountPage.isMessageDisplayed(ElementLocators.SIGN_IN_PAGE));
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(actionDriver.isMessageDisplayed(ElementLocators.SIGN_IN_PAGE));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
 	@Test
 	public void testMinimumPasswordLength() throws Exception  {
@@ -75,7 +75,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"));
 		ApiRequestHandler.deleteUser("Avinash.NoopDoddu@example.com");
 	}
 	@Test
@@ -85,7 +85,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"));
 		ApiRequestHandler.deleteUser("Avinash.Noop+Doddu@example.com");
 	}
 	@Test
@@ -94,12 +94,12 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, "First name is required."));	
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, "Last name is required."));
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Email is required."));
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_PASSWORD, "Password is required."));
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD, "Please confirm your password."));
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_TNC_CHECK_BOX, "You must agree to the Terms and Conditions."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, "First name is required."));	
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, "Last name is required."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Email is required."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_PASSWORD, "Password is required."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD, "Please confirm your password."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_TNC_CHECK_BOX, "You must agree to the Terms and Conditions."));
 	}
 	
 
@@ -110,7 +110,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Enter a valid email address."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Enter a valid email address."));
 	}
 	@Test
 	public void testEmailAlreadyRegistered()  {
@@ -119,7 +119,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.ERROR_MESSAGE, "Email already registered"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.ERROR_MESSAGE, "Email already registered"));
 	}
 	@Test
 	public void testPasswordMismatch()  {
@@ -128,7 +128,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,"Passwords do not match."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,"Passwords do not match."));
 	}
 	@Test
 	public void testSQLInjectionAttemptEmail()  {
@@ -137,7 +137,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Enter a valid email address."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Enter a valid email address."));
 	}
 	@Test
 	public void testXSSAttemptFirstName()  {
@@ -146,7 +146,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, "Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, "Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
 	}
 	@Test
 	public void testXSSAttemptLastName()  {
@@ -155,20 +155,20 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, "Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, "Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
 	}
 	@Test
 	public void testVerifyToggle()  {
 		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@example.com", "Password123!", "Password123!");		
-		Assert.assertTrue(createAccountPage.verifyAttribute(ElementLocators.PASSWORD, "type", "password"),
+		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.PASSWORD, "type", "password"),
 				"Expected password field to be type='password' initially");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.PASSWORD_TOGGLE);
-		Assert.assertTrue(createAccountPage.verifyAttribute(ElementLocators.PASSWORD, "type", "text"),
+		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.PASSWORD, "type", "text"),
 				"Expected password field to be type='text' after toggling visibility");
-		Assert.assertTrue(createAccountPage.verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "password"),
+		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "password"),
 				"Expected password field to be type='password' initially");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CONFIRM_PASSWORD_TOGGLE);
-		Assert.assertTrue(createAccountPage.verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "text"),
+		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "text"),
 				"Expected password field to be type='text' after toggling visibility");	
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
@@ -180,8 +180,8 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
 	}
 	@Test
 	public void testPasswordBelowMinimum()  {
@@ -190,7 +190,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,"Password must be at least 8 characters long."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,"Password must be at least 8 characters long."));
 	}
 	@Test
 	public void testSQLInjectionAttemptPassword()  {
@@ -199,7 +199,7 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,"Password must be at least 8 characters long."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,"Password must be at least 8 characters long."));
 	}
 	@Test
 	public void testFirstAndLastNameContainingOnlySpaces()  {
@@ -208,8 +208,8 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,"Must be at least 2 characters long."));
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,"Must be at least 2 characters long."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,"Must be at least 2 characters long."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,"Must be at least 2 characters long."));
 	}
 	
 	@Test
@@ -219,8 +219,8 @@ public class CreateAccountTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,"Must be at least 2 characters long."));
-		Assert.assertTrue(createAccountPage.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,"Must be at least 2 characters long."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,"Must be at least 2 characters long."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,"Must be at least 2 characters long."));
 	}
 	/*
 	@Test

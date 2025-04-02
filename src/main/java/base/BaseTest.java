@@ -44,6 +44,7 @@ public class BaseTest {
 		//ApiRequestHandler.deleteUser("Avinash.Noop@example.com");
 		//ApiRequestHandler.deleteUser("longemailaddresswithmultiplecharactersandnumbers1234567890abcdefghijklmnopqrstuvwx@domainexample.com");
 		//ApiRequestHandler.deleteUser("Avinash.Noop+Doddu@example.com");
+		//ApiRequestHandler.deleteUser("Avinash.NoopDoddu@example.com");
 	}
 
 	@BeforeMethod
@@ -131,6 +132,4 @@ public class BaseTest {
 		Log.info("Navigating to URL");
 		driver.get(ConfigReader.getProperty("url"));
 	}
-	
-
 }

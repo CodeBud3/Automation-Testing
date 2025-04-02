@@ -7,7 +7,6 @@ import base.BaseTest;
 import pages.LoginPage;
 import utils.ExtentReportManager;
 import utils.Log;
-
 import java.lang.reflect.Method;
 import enums.ActionTypes.ActionType;
 import enums.LoginPageLocatorEnum.ElementLocators;
@@ -34,18 +33,18 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
 	}
-
+	
 	@Test
 	public void testLoginWithInvalidCred() {
 		loginPage.populateLoginFields("admin@yourstore.com", "admin");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
-		Assert.assertTrue(loginPage.isMessageDisplayed(ElementLocators.SIGN_IN_FORM_CONTAINER));
+		Assert.assertTrue(actionDriver.isMessageDisplayed(ElementLocators.SIGN_IN_FORM_CONTAINER));
 		Assert.assertTrue(
-				loginPage.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
+				actionDriver.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
 	}
 
 	@Test
@@ -54,16 +53,16 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
 	}
 
 	@Test
 	public void testPassVisToggle() {
 		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
-		Assert.assertTrue(loginPage.verifyAttribute(ElementLocators.PASSWORD_VISIBILITY_TOGGLE, "type", "password"),
+		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.PASSWORD_VISIBILITY_TOGGLE, "type", "password"),
 				"Expected password field to be type='password' initially");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.PASS_VIS_TOGGLE);
-		Assert.assertTrue(loginPage.verifyAttribute(ElementLocators.PASSWORD_VISIBILITY_TOGGLE, "type", "text"),
+		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.PASSWORD_VISIBILITY_TOGGLE, "type", "text"),
 				"Expected password field to be type='text' after toggling visibility");
 		Log.info("Validating text");
 		test.info("Validating text");
@@ -75,7 +74,7 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
 	}
 
 	@Test
@@ -85,9 +84,9 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGOUT);
-		Assert.assertTrue(loginPage.verifyAttribute(ElementLocators.EMAIL_TEXT, "value", "john.doe@example.com"),
+		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.EMAIL_TEXT, "value", "john.doe@example.com"),
 				"Expected password field to be type='text' after toggling visibility");
 	}
 
@@ -99,7 +98,7 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.LOGOUT,
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT,
 				"Logout FirstNameJonathanAlexanderMaximillianChristopherAn"));
 	}
 
@@ -108,8 +107,8 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.EMAIL_MESSAGE, "Email is required."));
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.PASSWORD_MESSAGE, "Password is required."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.EMAIL_MESSAGE, "Email is required."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.PASSWORD_MESSAGE, "Password is required."));
 	}
 
 	@Test
@@ -119,7 +118,7 @@ public class LoginTest extends BaseTest {
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
 		Assert.assertTrue(
-				loginPage.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
+				actionDriver.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
 	}
 
 	@Test
@@ -127,8 +126,8 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.NAV_SIGN_UP);
 		Log.info("Validating messages on the registration page");
 		test.info("Validating messages on the registration page");
-		Assert.assertTrue(loginPage.isMessageDisplayed(ElementLocators.REGISTRATION_PAGE));
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.REGISTRATION_PAGE, "Create an account"));
+		Assert.assertTrue(actionDriver.isMessageDisplayed(ElementLocators.REGISTRATION_PAGE));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.REGISTRATION_PAGE, "Create an account"));
 	}
 
 	@Test
@@ -136,8 +135,8 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.SIGN_UP);
 		Log.info("Validating messages on the registration page");
 		test.info("Validating messages on the registration page");
-		Assert.assertTrue(loginPage.isMessageDisplayed(ElementLocators.REGISTRATION_PAGE));
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.REGISTRATION_PAGE, "Create an account"));
+		Assert.assertTrue(actionDriver.isMessageDisplayed(ElementLocators.REGISTRATION_PAGE));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.REGISTRATION_PAGE, "Create an account"));
 	}
 
 	@Test
@@ -145,8 +144,8 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.FORGOT_PASSWORD);
 		Log.info("Validating messages on the ForgotPassword page");
 		test.info("Validating messages on the ForgotPassword page");
-		Assert.assertTrue(loginPage.isMessageDisplayed(ElementLocators.FORGOT_PASSWORD_PAGE));
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.FORGOT_PASSWORD_PAGE, "Forgot password?"));
+		Assert.assertTrue(actionDriver.isMessageDisplayed(ElementLocators.FORGOT_PASSWORD_PAGE));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.FORGOT_PASSWORD_PAGE, "Forgot password?"));
 	}
 
 	@Test
@@ -155,7 +154,7 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.EMAIL_MESSAGE, "Enter a valid email address."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.EMAIL_MESSAGE, "Enter a valid email address."));
 	}
 
 	@Test
@@ -164,7 +163,7 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.EMAIL_MESSAGE, "Enter a valid email address."));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.EMAIL_MESSAGE, "Enter a valid email address."));
 	}
 
 	@Test
@@ -178,7 +177,7 @@ public class LoginTest extends BaseTest {
 			Log.info("Validating error message for attempt " + attempt);
 			test.info("Validating error message for attempt " + attempt);
 			Assert.assertTrue(
-					loginPage.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
+					actionDriver.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
 		}
 	}
 
@@ -189,7 +188,7 @@ public class LoginTest extends BaseTest {
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
 		Assert.assertTrue(
-				loginPage.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
+				actionDriver.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
 	}
 
 	@Test
@@ -199,7 +198,7 @@ public class LoginTest extends BaseTest {
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
 		Assert.assertTrue(
-				loginPage.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
+				actionDriver.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
 	}
 
 	@Test
@@ -207,7 +206,7 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.GOOGLE_AUTH);
 		Log.info("Validating Google Sign In Page");
 		test.info("Validating Microsoft Sign In Page");
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.GOOGLE_SIGN_IN, "Sign in"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.GOOGLE_SIGN_IN, "Sign in"));
 	}
 
 	@Test
@@ -215,7 +214,7 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.MICROSOFT_AUTH);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
-		Assert.assertTrue(loginPage.verifyMessage(ElementLocators.MICROSOFT_SIGN_IN, "Sign in"));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.MICROSOFT_SIGN_IN, "Sign in"));
 	}
 
 	@Test
@@ -227,7 +226,7 @@ public class LoginTest extends BaseTest {
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
 		Assert.assertTrue(
-				loginPage.verifyMessage(ElementLocators.EMAIL_MESSAGE, "Email cannot exceed 100 characters."));
+				actionDriver.verifyMessage(ElementLocators.EMAIL_MESSAGE, "Email cannot exceed 100 characters."));
 	}
 
 //	@Test
@@ -252,7 +251,7 @@ public class LoginTest extends BaseTest {
 //		// Verify the user is logged in
 //		Log.info("Validating login...");
 //		test.info("Validating login...");
-//		Assert.assertTrue(loginPage.verifyMessage("logoutButton", "Logout punith"),
+//		Assert.assertTrue(actionDriver.verifyMessage("logoutButton", "Logout punith"),
 //				"Expected 'Logout punith' button to be displayed after Google Auth login.");
 //		ExtentReportManager.captureAndAttachScreenshot(driver, test, "SignInWithGoogleAuth",
 //				"Screenshot after SignInWithGoogleAuth", true);
@@ -296,7 +295,7 @@ public class LoginTest extends BaseTest {
 //		// Verify the user is logged in and capture screenshot
 //		Log.info("Validating login...");
 //		test.info("Validating login...");
-//		Assert.assertTrue(loginPage.verifyMessage("logoutButton", "Logout Punith"),
+//		Assert.assertTrue(actionDriver.verifyMessage("logoutButton", "Logout Punith"),
 //				"Expected 'Logout punith' button to be displayed after Microsoft Auth login.");
 //		ExtentReportManager.captureAndAttachScreenshot(driver, test, "SignInWithMicroSoftAuth",
 //				"SignInWithMicroSoftAuth", true);
