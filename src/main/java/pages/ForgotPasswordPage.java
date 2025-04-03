@@ -4,7 +4,7 @@ import org.openqa.selenium.WebDriver;
 import utils.ConfigReader;
 import actiondriver.ActionDriver;
 import enums.ActionTypes.ActionType;
-import enums.CreateAccountLocatorEnum.ElementLocators;
+import enums.ForgotPasswordLocators.ElementLocators;
 
 public class ForgotPasswordPage {
 	private WebDriver driver;
@@ -20,12 +20,16 @@ public class ForgotPasswordPage {
 	}
 
 	public void populateForgotPageEmailFields(String email) {
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_ID, email);
+		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_FIELD, email);
 	}
 
 	public void populatePasswordRestFields(String password, String confirmpassword) {
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, confirmpassword);
+	}
+	public void populateLoginFields(String username, String password) {
+		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_FIELD, username);
+		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
 	}
 
 	// Locators

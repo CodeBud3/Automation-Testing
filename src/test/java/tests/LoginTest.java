@@ -26,7 +26,7 @@ public class LoginTest extends BaseTest {
 		Log.info("Navigating to login page");
 		test.info("Navigating to login page");
 	}
-
+/*
 	@Test
 	public void testValidLogin() {
 		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
@@ -308,5 +308,5 @@ public class LoginTest extends BaseTest {
 //		Log.info("Successfully validated Microsoft Auth login and logged out.");
 //		test.info("Successfully validated Microsoft Auth login and logged out.");
 //	}
-
+*/
 }

@@ -8,6 +8,8 @@ import utils.AttributeHelper;
 public class ForgotPasswordLocators {
 	public enum ElementLocators  implements ElementLocator {
 		// Buttons and Links (from ButtonType)
+		LOGIN("Login Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
+		LOGOUT("Logout Button", AttributeHelper.getElementByAttribute("button", "nav-logout")),
 		SIGN_UP("Sign Up Button", AttributeHelper.getElementByAttribute("button", "nav-signup-link")),
 		LOGIN_PAGE("Return To Login Page Link", AttributeHelper.getElementByAttribute("a", "login-link")),
 		EMAIL_FIELD("Email Field Text Box", AttributeHelper.getElementByAttribute("input", "field-email")),
