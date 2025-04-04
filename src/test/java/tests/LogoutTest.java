@@ -40,14 +40,5 @@ public class LogoutTest extends BaseTest {
 		Log.info("Validating Successful Logout");
 		test.info("Validating Successful Logout");
 		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
-		}
-//	@Test
-//	public void testDashboardPage() {
-//		logoutPage.populateLoginFields("john.doe@example.com", "Password123!");
-//		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
-//		logoutPage.navigateToLogoutPage();
-//		Log.info("Validating Dashboard Page");
-//		test.info("Validating Dashboard Page");
-//		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
-//		}
+	}
 }

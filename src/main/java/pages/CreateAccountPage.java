@@ -29,4 +29,8 @@ public class CreateAccountPage extends CreateAccountLocatorEnum {
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, confirmpassword);
 	}
+	public void clickButton() {
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
+	}
 }

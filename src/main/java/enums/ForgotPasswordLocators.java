@@ -22,6 +22,7 @@ public class ForgotPasswordLocators {
 		PASSWORD_TOGGLE("Toggle Password Button", AttributeHelper.getElementByAttribute("button", "password-visibility")),
 		CONFIRM_PASSWORD_TOGGLE("Toggle Confirm Password Button", AttributeHelper.getElementByAttribute("button", "confirmpassword-visibility")),
 		SAVE_PASSWORD("Save Password Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
+		CREATE_ACCOUNT("Create Account Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
 		VER_ERROR_EMAIL_ID("Verify Error Email ID", AttributeHelper.getElementByAttribute("p", "errormsg-email")),
 		VER_ERROR_PASSWORD("Verify Error Password", AttributeHelper.getElementByAttribute("p", "errormsg-password")),
 		VER_ERROR_CONFIRM_PASSWORD("Verify Error Confirm Password", AttributeHelper.getElementByAttribute("p", "errormsg-confirmpassword"));

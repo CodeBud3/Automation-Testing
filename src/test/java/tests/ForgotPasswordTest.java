@@ -28,7 +28,7 @@ public class ForgotPasswordTest extends BaseTest {
 		Log.info("Navigating to forgot password");
 		test.info("Navigating to forgot password");
 	}
-/*
+
 	@Test
 	public void testSignUpButton() {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.SIGN_UP);
@@ -176,7 +176,7 @@ public class ForgotPasswordTest extends BaseTest {
 		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
 				"Password must be at least 8 characters long."));
 	}
-	*/
+	
 	@Test
 	public void testPasswordReset() {
 		driver.get(ConfigReader.getProperty("url"));
@@ -193,5 +193,5 @@ public class ForgotPasswordTest extends BaseTest {
 		test.info("Navigating to Sign in Page");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGOUT);
 		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
-	}	
+	}
 }
