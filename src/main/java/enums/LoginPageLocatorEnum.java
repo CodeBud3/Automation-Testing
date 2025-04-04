@@ -20,6 +20,8 @@ public class LoginPageLocatorEnum {
 		FORGOT_PASSWORD("Forgot Password Link",
 				AttributeHelper.getElementByAttribute("a", "forgot-password-link")),
 		SIGN_IN_PAGE("Sign In Page Message", AttributeHelper.getElementByAttribute("div", "signin-card-title")),
+		SAVE_PASSWORD("Save Password Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
+		CREATE_ACCOUNT("Create Account Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
 
 		// Text Fields (from EnterText)
 		EMAIL_TEXT("Email Text Box", AttributeHelper.getElementByAttribute("input", "field-email")),
