@@ -11,6 +11,8 @@ import utils.Log;
 import java.lang.reflect.Method;
 import enums.ActionTypes.ActionType;
 import enums.ForgotPasswordLocators.ElementLocators;
+import enums.SideNavLocators.SideNavLocator;
+import factory.DriverFactory;
 
 public class ForgotPasswordTest extends BaseTest {
 	// mvn test -Dtest=ForgotPasswordTest
@@ -23,10 +25,11 @@ public class ForgotPasswordTest extends BaseTest {
 		// Set the test title dynamically
 		test = ExtentReportManager.createTest(testMethodName);
 		test.info("Navigating to Forgot Password Page");
-		forgotPasswordPage = new ForgotPasswordPage(driver);
+		forgotPasswordPage = new ForgotPasswordPage(DriverFactory.getDriver(), actionDriver);
 		forgotPasswordPage.navigateToForgotPasswordPage();
 		Log.info("Navigating to forgot password");
 		test.info("Navigating to forgot password");
+		System.out.println("Thread ID: " + Thread.currentThread().getId());
 	}
 
 	@Test
@@ -179,19 +182,21 @@ public class ForgotPasswordTest extends BaseTest {
 	
 	@Test
 	public void testPasswordReset() {
-		driver.get(ConfigReader.getProperty("url"));
-		forgotPasswordPage.populateLoginFields("john.doe@example.com", "Password123!");
-		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		forgotPasswordPage.resetPasswordLink();
 		String baseUrl = ConfigReader.getProperty("url");
-		String resetPasswordUrl = baseUrl + "/reset-password?token=333";
-		driver.navigate().to(resetPasswordUrl);
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, "Password123!");
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, "Password123!");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
+		
+		String loginUrl = baseUrl + "/login";
+		DriverFactory.getDriver().navigate().to(loginUrl);
+		forgotPasswordPage.populateLoginFields("john.doe@example.com", "Password123!");
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Navigating to Sign in Page");
 		test.info("Navigating to Sign in Page");
-		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGOUT);
+		actionDriver.performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
+		actionDriver.performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
 		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
 }

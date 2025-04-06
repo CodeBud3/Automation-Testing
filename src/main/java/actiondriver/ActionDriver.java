@@ -10,7 +10,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import enums.ActionTypes.ActionType;
-import enums.LoginPageLocatorEnum.ElementLocators;
 import interfaces.ElementLocator;
 import utils.ConfigReader;
 import utils.Log;

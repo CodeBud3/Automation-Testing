@@ -12,9 +12,9 @@ public class CreateAccountPage extends CreateAccountLocatorEnum {
 	private ActionDriver actionDriver;
 	
 
-	public CreateAccountPage(WebDriver driver) {
+	public CreateAccountPage(WebDriver driver, ActionDriver actionDriver) {
 		this.driver = driver;
-		this.actionDriver = new ActionDriver(driver); // Initialize with the provided driver
+		this.actionDriver = actionDriver; // Initialize with the provided driver
 	}
 	
 	public void navigateToCreateAccountPage() {

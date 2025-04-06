@@ -13,7 +13,10 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import enums.ActionTypes.ActionType;
+import enums.DashboardPageLocators.DashboardLocators;
 import enums.LoginPageLocatorEnum.ElementLocators;
+import enums.SideNavLocators.SideNavLocator;
+import factory.DriverFactory;
 
 public class LoginTest extends BaseTest {
 	// mvn test -Dtest=LoginTest
@@ -26,9 +29,10 @@ public class LoginTest extends BaseTest {
 		// Set the test title dynamically
 		test = ExtentReportManager.createTest(testMethodName);
 		test.info("Navigating to login page");
-		loginPage = new LoginPage(driver);
+		loginPage = new LoginPage(DriverFactory.getDriver(), actionDriver);
 		Log.info("Navigating to login page");
 		test.info("Navigating to login page");
+		System.out.println("Thread ID: " + Thread.currentThread().getId());
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
@@ -37,7 +41,7 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, "+data.get("Expected Result")));
 	}
 	
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
@@ -57,7 +61,7 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 	}
 
 	@Test
@@ -78,7 +82,7 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 	}
 
 	@Test
@@ -88,8 +92,9 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
-		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGOUT);
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
+		actionDriver.performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
+		actionDriver.performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
 		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.EMAIL_TEXT, "value", "john.doe@example.com"),
 				"Expected password field to be type='text' after toggling visibility");
 	}
@@ -102,8 +107,7 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT,
-				"Logout FirstNameJonathanAlexanderMaximillianChristopherAn"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, FirstNameJonathanAlexanderMaximillianChristopherAn"));
 	}
 
 	@Test
@@ -239,13 +243,13 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 		String baseUrl = ConfigReader.getProperty("url");
 		Log.info("navigating to reset password");
 		String resetPasswordUrl = baseUrl + "/reset-password";
-		driver.navigate().to(resetPasswordUrl);
+		DriverFactory.getDriver().navigate().to(resetPasswordUrl);
 		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 	}
 	@Test
 	public void verifySignUpNotAccessibleAfterLogin() {
@@ -253,13 +257,13 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 		String baseUrl = ConfigReader.getProperty("url");
 		Log.info("navigating to sing up page");
 		String singUpUrl = baseUrl + "/signup";
-		driver.navigate().to(singUpUrl);
+		DriverFactory.getDriver().navigate().to(singUpUrl);
 		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.CREATE_ACCOUNT.getLocator()));
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 	}
 	
 	@Test
@@ -268,10 +272,10 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
-		driver.navigate().to(ConfigReader.getProperty("url"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
+		DriverFactory.getDriver().navigate().to(ConfigReader.getProperty("url"));
 		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.LOGIN.getLocator()));
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 	}
 
 	@Test	
@@ -279,7 +283,7 @@ public class LoginTest extends BaseTest {
 		String baseUrl = ConfigReader.getProperty("url");
 		Log.info("Navigating to Dashboard Page");
 		String dashboardUrl = baseUrl + "/dashboard";
-		driver.navigate().to(dashboardUrl);
+		DriverFactory.getDriver().navigate().to(dashboardUrl);
 		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.LOGOUT.getLocator()));
 		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGIN, "Sign in"));
 	}
@@ -289,12 +293,12 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 		String baseUrl = ConfigReader.getProperty("url");
 		String resetPasswordkeyUrl = baseUrl + "/reset-password?token=333";
-		driver.navigate().to(resetPasswordkeyUrl);
+		DriverFactory.getDriver().navigate().to(resetPasswordkeyUrl);
 		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
-        Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+        Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 	}
 	
 	@Test
@@ -303,13 +307,13 @@ public class LoginTest extends BaseTest {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 		String baseUrl = ConfigReader.getProperty("url");
 		String token = ConfigReader.getProperty("ResetPasswordUserToken");
 		String resetPasswordkeyUrl = baseUrl + "/reset-password?token=" + token;
-		driver.navigate().to(resetPasswordkeyUrl);
+		DriverFactory.getDriver().navigate().to(resetPasswordkeyUrl);
 		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
-        Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+        Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 	}
 	
 	

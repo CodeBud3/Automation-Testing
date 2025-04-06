@@ -6,7 +6,11 @@ import org.testng.annotations.Test;
 import base.BaseTest;
 import pages.CreateAccountPage;
 import enums.ActionTypes.ActionType;
+import enums.SideNavLocators.SideNavLocator;
+
 import enums.CreateAccountLocatorEnum.ElementLocators;
+import enums.DashboardPageLocators.DashboardLocators;
+import factory.DriverFactory;
 import utils.ApiRequestHandler;
 import utils.ExtentReportManager;
 import utils.Log;
@@ -24,10 +28,11 @@ public class CreateAccountTest extends BaseTest {
 		// Set the test title dynamically
 		test = ExtentReportManager.createTest(testMethodName);
 		test.info("Navigating to Sign up page");
-		createAccountPage = new CreateAccountPage(driver);
+		createAccountPage = new CreateAccountPage(DriverFactory.getDriver(), actionDriver);
 		createAccountPage.navigateToCreateAccountPage();
 		Log.info("Navigating to Creating Account Page...");
 		test.info("Navigating to Creating Account Page...");
+		System.out.println("Thread ID: " + Thread.currentThread().getId());
 	}
 
 	@Test
@@ -37,7 +42,7 @@ public class CreateAccountTest extends BaseTest {
 		createAccountPage.clickButton();
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, Avinash"));
 		ApiRequestHandler.deleteUser("Avinash.Noop@example.com");
 	}
 
@@ -51,8 +56,8 @@ public class CreateAccountTest extends BaseTest {
 		createAccountPage.clickButton();
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT,
-				"Logout FirstNameWithMaxLengthForTestingABCDEFGHIJABCDEFAA"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, FirstNameWithMaxLengthForTestingABCDEFGHIJABCDEFAA"));
 		ApiRequestHandler.deleteUser(
 				"longemailaddresswithmultiplecharactersandnumbers1234567890abcdefghijklmnopqrstuvwx@domainexample.com");
 	}
@@ -82,7 +87,7 @@ public class CreateAccountTest extends BaseTest {
 		createAccountPage.clickButton();
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"));
+		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, Avinash"));
 		ApiRequestHandler.deleteUser("Avinash.NoopDoddu@example.com");
 	}
 
@@ -269,9 +274,10 @@ public class CreateAccountTest extends BaseTest {
 			createAccountPage.clickButton();
 			Log.info("Validating Account Registration for email: " + currentEmail);
 			test.info("Validating Account Registration for email: " + currentEmail);
-			Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout Avinash"),
+			Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, Avinash"),
 					"Account registration failed for email: " + currentEmail);
-			actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGOUT);
+			actionDriver.performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
+			actionDriver.performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
 			ApiRequestHandler.deleteUser(currentEmail);
 		}
 	}

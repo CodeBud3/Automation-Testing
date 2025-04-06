@@ -7,7 +7,7 @@ import utils.AttributeHelper;
 
 public class CreateAccountLocatorEnum {
 		// Locators
-		public enum ElementLocators implements ElementLocator {
+		public enum ElementLocators implements ElementLocator  {
 			
 			FIRST_NAME("First Name Text Box", AttributeHelper.getElementByAttribute("input", "field-firstname")),
 			LAST_NAME("Last Name Text Box", AttributeHelper.getElementByAttribute("input", "field-lastname")),
@@ -20,7 +20,6 @@ public class CreateAccountLocatorEnum {
 			NAV_LOGIN("Navigate Login Button", AttributeHelper.getElementByAttribute("button", "nav-signin-link")),
 			PASSWORD_TOGGLE("Toggle Password Button", AttributeHelper.getElementByAttribute("button", "password-visibility")),
 			CONFIRM_PASSWORD_TOGGLE("Toggle Confirm Password Button", AttributeHelper.getElementByAttribute("button", "confirmpassword-visibility")),
-			LOGOUT("Logout Button", AttributeHelper.getElementByAttribute("button", "nav-logout")),
 			SIGN_IN_PAGE("Navigate to Sign In Page", AttributeHelper.getElementByAttribute("div", "signin-card-title")),
 			
 			//GOOGLE_AUTH("Google Auth Button", AttributeHelper.getElementByAttribute("button", "signin-google-auth")),
@@ -32,8 +31,7 @@ public class CreateAccountLocatorEnum {
 			VER_ERROR_EMAIL_ID("Verify Error Email", AttributeHelper.getElementByAttribute("p", "errormsg-email")),
 			VER_ERROR_PASSWORD("Verify Error Password", AttributeHelper.getElementByAttribute("p", "errormsg-password")),
 			VER_ERROR_CONFIRM_PASSWORD("Verify Error Confirm Password", AttributeHelper.getElementByAttribute("p", "errormsg-confirmpassword")),
-			VER_ERROR_TNC_CHECK_BOX("Verify Error AttributeHelper", AttributeHelper.getElementByAttribute("p", "errormsg-tnc"));
-			
+			VER_ERROR_TNC_CHECK_BOX("Verify Error AttributeHelper", AttributeHelper.getElementByAttribute("p", "errormsg-tnc"));			
 			private final String name;
 			private final By locator;
 
