@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suite name="Authentication Suite" parallel="tests" thread-count="4">
-<test name="Logout Tests">
-		<classes>
-			<class name="tests.LogoutTest"></class>
-		</classes>
-	</test>
 	<test name="Registration Tests">
 		<classes>
 			<class name="tests.CreateAccountTest"></class>
@@ -18,6 +13,11 @@
 	<test name="Forgot Password Tests">
 		<classes>
 			<class name="tests.ForgotPasswordTest"></class>
+		</classes>
+	</test>
+	<test name="Logout Tests">
+		<classes>
+			<class name="tests.LogoutTest"></class>
 		</classes>
 	</test>
 </suite>
