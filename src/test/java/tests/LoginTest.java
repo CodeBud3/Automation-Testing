@@ -5,9 +5,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import base.BaseTest;
 import pages.LoginPage;
+import utils.ExcelDataProvider;
 import utils.ExtentReportManager;
 import utils.Log;
 import java.lang.reflect.Method;
+import java.util.Map;
+
 import enums.ActionTypes.ActionType;
 import enums.LoginPageLocatorEnum.ElementLocators;
 
@@ -27,24 +30,24 @@ public class LoginTest extends BaseTest {
 		test.info("Navigating to login page");
 	}
 
-	@Test
-	public void testValidLogin() {
-		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testValidLogin(Map<String, String> data) {
+		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
 		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
 	}
 	
-	@Test
-	public void testLoginWithInvalidCred() {
-		loginPage.populateLoginFields("admin@yourstore.com", "admin");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testLoginWithInvalidCred(Map<String, String> data) {
+		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
 		Assert.assertTrue(actionDriver.isMessageDisplayed(ElementLocators.SIGN_IN_FORM_CONTAINER));
 		Assert.assertTrue(
-				actionDriver.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
+				actionDriver.verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, data.get("Expected Result")));
 	}
 
 	@Test
