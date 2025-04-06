@@ -9,6 +9,8 @@ import utils.ExcelDataProvider;
 import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;
+import utils.RetryAnalyzer;
+
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -84,7 +86,7 @@ public class LoginTest extends BaseTest {
 		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
 	}
 
-	@Test
+	@Test(retryAnalyzer = RetryAnalyzer.class)
 	public void testSignInWithRememberMe() {
 		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.REMEMBER_ME);

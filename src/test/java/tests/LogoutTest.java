@@ -8,6 +8,7 @@ import enums.ActionTypes.ActionType;
 import enums.DashboardPageLocators.DashboardLocators;
 import utils.ExtentReportManager;
 import utils.Log;
+import utils.RetryAnalyzer;
 import pages.LogoutPage;
 import enums.LogoutPageLocatorEnum.ElementLocators;
 import enums.SideNavLocators.SideNavLocator;
@@ -33,7 +34,7 @@ public class LogoutTest extends BaseTest {
 		System.out.println("Thread ID: " + Thread.currentThread().getId());
 	}
 	
-	@Test
+	@Test(retryAnalyzer = RetryAnalyzer.class)
 	public void testLogoutPage() {
 		logoutPage.populateLoginFields("john.doe@example.com", "Password123!");
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);

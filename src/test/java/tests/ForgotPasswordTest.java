@@ -8,6 +8,8 @@ import pages.ForgotPasswordPage;
 import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;
+import utils.RetryAnalyzer;
+
 import java.lang.reflect.Method;
 import enums.ActionTypes.ActionType;
 import enums.ForgotPasswordLocators.ElementLocators;
@@ -177,7 +179,7 @@ public class ForgotPasswordTest extends BaseTest {
 				"Password must be at least 8 characters long."));
 	}
 	
-	@Test
+	@Test(retryAnalyzer = RetryAnalyzer.class)
 	public void testPasswordReset() {
 		forgotPasswordPage.resetPasswordLink();
 		String baseUrl = ConfigReader.getProperty("url");

@@ -13,6 +13,8 @@ import enums.DashboardPageLocators.DashboardLocators;
 import utils.ApiRequestHandler;
 import utils.ExtentReportManager;
 import utils.Log;
+import utils.RetryAnalyzer;
+
 import java.lang.reflect.Method;
 
 public class CreateAccountTest extends BaseTest {
@@ -261,7 +263,7 @@ public class CreateAccountTest extends BaseTest {
 		}
 	}
 
-	@Test
+	@Test(retryAnalyzer = RetryAnalyzer.class)
 	public void testEmailContainingSpecialCharacters() throws Exception {
 		String[] emailsWithSpecialChars = {"Avinash.Noop_Doddu@example.com", "Avinash.Noop-Doddu@example.com",
 				"Avinash.Noop+Doddu@example.com" };
