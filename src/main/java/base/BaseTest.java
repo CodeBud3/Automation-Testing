@@ -21,17 +21,16 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 
 import actiondriver.ActionDriver;
-import factory.DriverFactory;
 import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;
 
 public class BaseTest {
-	protected static ActionDriver actionDriver;
 	protected static ExtentReports extent;
 	protected static Properties prop;
-	protected static WebDriver driverInstance;
 	protected ExtentTest test;
+	private static final ThreadLocal<WebDriver> driverInstance = new ThreadLocal<>();
+	private static final ThreadLocal<ActionDriver> actionDriver = new ThreadLocal<>();
 
 	@BeforeSuite
 	public void setupSuite() throws IOException {
@@ -49,41 +48,37 @@ public class BaseTest {
 
 	@BeforeMethod
 	public void setUp() {
-		// Initialize the web driver based on config.properties
 		initDriver();
-		// setup browser configurations
 		configureBrowser();
-		if (actionDriver == null) {
-			actionDriver = new ActionDriver(DriverFactory.getDriver());
-		}
+		actionDriver.set(new ActionDriver(getDriver()));
 	}
 
 	@AfterMethod
 	public void tearDown(ITestResult result) {
 		// Capture screenshots for both success and failure cases
 		if (result.getStatus() == ITestResult.SUCCESS) {
-			String screenshotPath = ExtentReportManager.captureScreenshot(DriverFactory.getDriver(), result.getMethod().getMethodName());
+			String screenshotPath = ExtentReportManager.captureScreenshot(getDriver(), result.getMethod().getMethodName());
 			Log.info("Test passed. Screenshot captured at: " + screenshotPath);
 			test.pass("Test passed. Check screenshot",
 					MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
 		} else if (result.getStatus() == ITestResult.FAILURE) {
-			String screenshotPath = ExtentReportManager.captureScreenshot(DriverFactory.getDriver(), result.getMethod().getMethodName());
+			String screenshotPath = ExtentReportManager.captureScreenshot(getDriver(), result.getMethod().getMethodName());
 			Log.info("Test failed. Screenshot captured at: " + screenshotPath);
 			test.fail("Test failed. Check screenshot",
 					MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
 		}
 
 		// Cleanup
-		if (DriverFactory.getDriver() != null) {
+		if (getDriver() != null) {
 			Log.info("Terminating driver!");
-			DriverFactory.quitDriver();
+			getDriver().quit();
+			driverInstance.remove();
+			actionDriver.remove();
 		}
-		driverInstance = null;
-		actionDriver = null;
 	}
 
-	public static WebDriver getWebDriver() {
-		return DriverFactory.getDriver();
+	public static WebDriver getDriver() {
+		return driverInstance.get();
 	}
 
 	public static ActionDriver getActionDriver() {
@@ -91,7 +86,7 @@ public class BaseTest {
 			Log.error("Action driver is not initialized");
 			throw new IllegalStateException("Action driver is not initialized");
 		}
-		return actionDriver;
+		return actionDriver.get();
 	}
 
 	public void staticWait(int seconds) {
@@ -104,31 +99,30 @@ public class BaseTest {
 
 		switch (browser.toLowerCase()) {
 		case "chrome": {
-			driverInstance = new ChromeDriver();
+			driverInstance.set(new ChromeDriver());
 			break;
 		}
 		case "firefox": {
-			driverInstance = new FirefoxDriver();
+			driverInstance.set(new FirefoxDriver());
 			break;
 		}
 		case "edge": {
-			driverInstance = new EdgeDriver();
+			driverInstance.set(new EdgeDriver());
 			break;
 		}
 		default: {
 			throw new IllegalArgumentException("Browser not supported: " + browser);
 		}
 		}
-		DriverFactory.setDriver(driverInstance);
 	}
 
 	private void configureBrowser() {
 		// Implicit Wait
 		int implicitWait = ConfigReader.getIntProperty("implicitWait");
-		DriverFactory.getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
+		getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitWait));
 
-		DriverFactory.getDriver().manage().window().maximize();
+		getDriver().manage().window().maximize();
 		Log.info("Navigating to URL");
-		DriverFactory.getDriver().get(ConfigReader.getProperty("url"));
+		getDriver().get(ConfigReader.getProperty("url"));
 	}
 }

@@ -11,7 +11,6 @@ import utils.Log;
 import pages.LogoutPage;
 import enums.LogoutPageLocatorEnum.ElementLocators;
 import enums.SideNavLocators.SideNavLocator;
-import factory.DriverFactory;
 
 import java.lang.reflect.Method;
 
@@ -27,7 +26,7 @@ public class LogoutTest extends BaseTest {
         // Set the test title dynamically
         test = ExtentReportManager.createTest(testMethodName);
 		test.info("Navigating to Sign up page");
-		logoutPage = new LogoutPage(DriverFactory.getDriver(), actionDriver);
+		logoutPage = new LogoutPage(getDriver(), getActionDriver());
 		logoutPage.navigateToLogoutPage();
 		Log.info("Navigating to Creating Account Page...");
 		test.info("Navigating to Creating Account Page...");
@@ -37,14 +36,14 @@ public class LogoutTest extends BaseTest {
 	@Test
 	public void testLogoutPage() {
 		logoutPage.populateLoginFields("john.doe@example.com", "Password123!");
-		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(actionDriver.verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
-		actionDriver.performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
-		actionDriver.performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
+		getActionDriver().performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
+		getActionDriver().performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
 		Log.info("Validating Successful Logout");
 		test.info("Validating Successful Logout");
-		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
 }
