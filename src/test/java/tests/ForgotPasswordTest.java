@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import base.BaseTest;
 import pages.ForgotPasswordPage;
+import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;
 import java.lang.reflect.Method;
@@ -130,7 +131,7 @@ public class ForgotPasswordTest extends BaseTest {
 	@Test
 	public void testVerifyToggle() {
 		forgotPasswordPage.resetPasswordLink();
-		forgotPasswordPage.populatePasswordRestFields("Password123!", "ElementLocators");
+		forgotPasswordPage.populatePasswordRestFields("Password123!", "Password123!");
 		Assert.assertTrue(actionDriver.verifyAttribute(ElementLocators.PASSWORD, "type", "password"),
 				"Expected password field to be type='password' initially");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.PASSWORD_TOGGLE);
@@ -175,15 +176,22 @@ public class ForgotPasswordTest extends BaseTest {
 		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
 				"Password must be at least 8 characters long."));
 	}
+	
 	@Test
 	public void testPasswordReset() {
-		forgotPasswordPage.resetPasswordLink();
+		driver.get(ConfigReader.getProperty("url"));
+		forgotPasswordPage.populateLoginFields("john.doe@example.com", "Password123!");
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		String baseUrl = ConfigReader.getProperty("url");
+		String resetPasswordUrl = baseUrl + "/reset-password?token=333";
+		driver.navigate().to(resetPasswordUrl);
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, "Password123!");
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, "Password123!");
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
 		Log.info("Navigating to Sign in Page");
 		test.info("Navigating to Sign in Page");
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGOUT);
 		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
 	}
 }

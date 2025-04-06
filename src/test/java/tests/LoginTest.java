@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 import base.BaseTest;
 import pages.LoginPage;
 import utils.ExcelDataProvider;
+import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;
 import java.lang.reflect.Method;
@@ -231,7 +232,90 @@ public class LoginTest extends BaseTest {
 		Assert.assertTrue(
 				actionDriver.verifyMessage(ElementLocators.EMAIL_MESSAGE, "Email cannot exceed 100 characters."));
 	}
+	
+	@Test
+	public void verifyResetPasswordNotAccessibleAfterLogin() {
+		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		Log.info("Validating Successful Sign in");
+		test.info("Validating Successful Sign in");
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		String baseUrl = ConfigReader.getProperty("url");
+		Log.info("navigating to reset password");
+		String resetPasswordUrl = baseUrl + "/reset-password";
+		driver.navigate().to(resetPasswordUrl);
+		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+	}
+	@Test
+	public void verifySignUpNotAccessibleAfterLogin() {
+		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		Log.info("Validating Successful Sign in");
+		test.info("Validating Successful Sign in");
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		String baseUrl = ConfigReader.getProperty("url");
+		Log.info("navigating to sing up page");
+		String singUpUrl = baseUrl + "/signup";
+		driver.navigate().to(singUpUrl);
+		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.CREATE_ACCOUNT.getLocator()));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+	}
+	
+	@Test
+	public void verifyLoginPageNotAccessibleAfterLogin() {
+		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		Log.info("Validating Successful Sign in");
+		test.info("Validating Successful Sign in");
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		driver.navigate().to(ConfigReader.getProperty("url"));
+		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.LOGIN.getLocator()));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+	}
 
+	@Test	
+	public void verifyDashoardPageNotAccessibleBeforeLogin() {
+		String baseUrl = ConfigReader.getProperty("url");
+		Log.info("Navigating to Dashboard Page");
+		String dashboardUrl = baseUrl + "/dashboard";
+		driver.navigate().to(dashboardUrl);
+		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.LOGOUT.getLocator()));
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGIN, "Sign in"));
+	}
+	@Test
+	public void verifyResetPasswordTokenNotAccessibleAfterLogin() {
+		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		Log.info("Validating Successful Sign in");
+		test.info("Validating Successful Sign in");
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		String baseUrl = ConfigReader.getProperty("url");
+		String resetPasswordkeyUrl = baseUrl + "/reset-password?token=333";
+		driver.navigate().to(resetPasswordkeyUrl);
+		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
+        Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+	}
+	
+	@Test
+	public void verifyResetPasswordTokenkeyNotAccessibleAfterLogin() {
+		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		Log.info("Validating Successful Sign in");
+		test.info("Validating Successful Sign in");
+		Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+		String baseUrl = ConfigReader.getProperty("url");
+		String token = ConfigReader.getProperty("ResetPasswordUserToken");
+		String resetPasswordkeyUrl = baseUrl + "/reset-password?token=" + token;
+		driver.navigate().to(resetPasswordkeyUrl);
+		//Assert.assertFalse(actionDriver.isDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
+        Assert.assertTrue(actionDriver.verifyMessage(ElementLocators.LOGOUT, "Logout john"));
+	}
+	
+	
+	
+	
+	
 //	@Test
 //	public void testSignInWithGoogleAuth() {
 //		// Click the Google Auth button
