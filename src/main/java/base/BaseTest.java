@@ -10,6 +10,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
@@ -31,7 +32,7 @@ public class BaseTest {
 	protected ExtentTest test;
 	private static final ThreadLocal<WebDriver> driverInstance = new ThreadLocal<>();
 	private static final ThreadLocal<ActionDriver> actionDriver = new ThreadLocal<>();
-
+	private static final ThreadLocal<WebDriverWait> wait = new ThreadLocal<>();
 	@BeforeSuite
 	public void setupSuite() throws IOException {
 		extent = ExtentReportManager.getReportInstance();
@@ -50,7 +51,10 @@ public class BaseTest {
 	public void setUp() {
 		initDriver();
 		configureBrowser();
-		actionDriver.set(new ActionDriver(getDriver()));
+		int explicitWait = ConfigReader.getIntProperty("explicitWait");
+		wait.set(new WebDriverWait(getDriver(), Duration.ofSeconds(explicitWait)));
+		actionDriver.set(new ActionDriver(getDriver(), getWait()));
+		
 	}
 
 	@AfterMethod
@@ -88,7 +92,9 @@ public class BaseTest {
 		}
 		return actionDriver.get();
 	}
-
+	public static WebDriverWait getWait() {
+		return wait.get();
+	}
 	public void staticWait(int seconds) {
 		LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
 	}

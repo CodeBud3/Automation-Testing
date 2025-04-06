@@ -18,10 +18,10 @@ public class ActionDriver {
 	private WebDriver driver;
 	private WebDriverWait wait;
 
-	public ActionDriver(WebDriver driver) {
+	public ActionDriver(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
-		int explicitWait = ConfigReader.getIntProperty("explicitWait");
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(explicitWait));
+		
+		this.wait = wait;
 	}
 
 	public void click(By by) {
