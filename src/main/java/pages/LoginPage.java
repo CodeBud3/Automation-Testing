@@ -10,9 +10,9 @@ public class LoginPage extends LoginPageLocatorEnum {
 	private ActionDriver actionDriver;
 	
 
-	public LoginPage(WebDriver driver) {
+	public LoginPage(WebDriver driver, ActionDriver actionDriver) {
 		this.driver = driver;
-		this.actionDriver = new ActionDriver(driver); // Initialize with the provided driver
+		this.actionDriver = actionDriver; // Initialize with the provided driver
 	}
 	
 	public void populateLoginFields(String username, String password) {

@@ -10,7 +10,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import enums.ActionTypes.ActionType;
-import enums.LoginPageLocatorEnum.ElementLocators;
 import interfaces.ElementLocator;
 import utils.ConfigReader;
 import utils.Log;
@@ -19,10 +18,10 @@ public class ActionDriver {
 	private WebDriver driver;
 	private WebDriverWait wait;
 
-	public ActionDriver(WebDriver driver) {
+	public ActionDriver(WebDriver driver, WebDriverWait wait) {
 		this.driver = driver;
-		int explicitWait = ConfigReader.getIntProperty("explicitWait");
-		this.wait = new WebDriverWait(driver, Duration.ofSeconds(explicitWait));
+		
+		this.wait = wait;
 	}
 
 	public void click(By by) {

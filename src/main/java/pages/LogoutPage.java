@@ -12,9 +12,9 @@ public class LogoutPage extends LogoutPageLocatorEnum {
 	private ActionDriver actionDriver;
 	
 
-	public LogoutPage(WebDriver driver) {
+	public LogoutPage(WebDriver driver, ActionDriver actionDriver) {
 		this.driver = driver;
-		this.actionDriver = new ActionDriver(driver); // Initialize with the provided driver
+		this.actionDriver = actionDriver; // Initialize with the provided driver
 	}
 	
 	public void navigateToLogoutPage() {

@@ -10,9 +10,9 @@ public class ForgotPasswordPage {
 	private WebDriver driver;
 	private ActionDriver actionDriver;
 
-	public ForgotPasswordPage(WebDriver driver) {
+	public ForgotPasswordPage(WebDriver driver, ActionDriver actionDriver) {
 		this.driver = driver;
-		this.actionDriver = new ActionDriver(driver); // Initialize with the provided driver
+		this.actionDriver = actionDriver; // Initialize with the provided driver
 	}
 
 	public void navigateToForgotPasswordPage() {
