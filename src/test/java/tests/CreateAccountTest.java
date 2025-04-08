@@ -20,6 +20,10 @@ import java.util.Map;
 public class CreateAccountTest extends BaseTest {
 
 	private CreateAccountPage createAccountPage;
+	private String[] extractFieldValues(Map<String, String> data, String fieldName) {
+        return data.getOrDefault(fieldName, "").split("\n");
+    }
+	
 
 	// mvn test -Dtest=CreateAccountTest
 	@BeforeMethod
@@ -44,7 +48,8 @@ public class CreateAccountTest extends BaseTest {
             data.get("Confirm Password")
         );
     }
-
+	
+	
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testSuccessfulAccountCreation(Map<String, String> data) throws Exception {
 		populateAccountFields(data);
@@ -243,57 +248,61 @@ public class CreateAccountTest extends BaseTest {
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,
 				expectedErrorLastName));
 	}
-
+	
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
-	public void testPasswordErrorChecks(Map<String, String> data) throws Exception {
-		String[] passwords = { "", "password", "PASSWORD", "Password", "Password123" };
+    public void testPasswordErrorChecks(Map<String, String> data) throws Exception {
+        String[] passwords = extractFieldValues(data, "Password");
+        String[] errorMessages = extractFieldValues(data, "Expected Result");
 
-		String[] errorMessages = { "Password is required.", "Must include at least one uppercase letter (A-Z).",
-				"Must include at least one lowercase letter (a-z).", "Must include at least one number (0-9).",
-				"Must include at least one special character (@$!%*?&)." };
-		for (int attempt = 0; attempt < passwords.length; attempt++) {
-			createAccountPage.populateCreateAccountFields("Avinash", "Noop", "Avinash.Noop@example.com",
-					passwords[attempt], "");
-			createAccountPage.clickButton();
-			Log.info("Validating Error Message for attempt " + (attempt + 1) + ": " + errorMessages[attempt]);
-			test.info("Validating Error Message for password: " + passwords[attempt]);
-			Assert.assertTrue(
-					getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, errorMessages[attempt]),
-					"Error message validation failed for password: " + passwords[attempt]);
-		}
-	}
+        int maxAttempts = Math.min(passwords.length, errorMessages.length);
+
+        for (int attempt = 0; attempt < maxAttempts; attempt++) {
+            String currentPassword = passwords[attempt];
+            String expectedError = errorMessages[attempt];
+
+            createAccountPage.populateCreateAccountFields(
+                data.get("First Name"), 
+                data.get("Last Name"), 
+                data.get("Email"), 
+                currentPassword, 
+                ""
+            );
+            createAccountPage.clickButton();
+
+            String logMessage = String.format("Validating Error Message for attempt %d: %s", attempt + 1, expectedError);
+            Log.info(logMessage);
+            test.info("Validating Error Message for password: " + currentPassword);
+
+            boolean isErrorValid = getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, expectedError);
+            Assert.assertTrue(isErrorValid, "Error message validation failed for password: " + currentPassword);
+        }
+    }
+
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testInvalidEmailFormat(Map<String, String> data) throws Exception {
-		String[] invalidEmails = { "john.doe@exampl", "john.doe", "@example.com", "john.doe@.com",
-				"john..doe@example.com" };
-		String expectedErrorMessage = "Enter a valid email address.";
-		for (int attempt = 0; attempt < invalidEmails.length; attempt++) {
-			String currentEmail = invalidEmails[attempt];
-			createAccountPage.populateCreateAccountFields("John", "Doe", currentEmail, "Password123!", "Password123!");
+		String[] emailData = extractFieldValues(data, "Email");
+		for (int attempt = 0; attempt < emailData.length; attempt++) {
+			String currentEmail = emailData[attempt];
+			createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Last Name"), currentEmail, data.get("Password"), data.get("Confirm Password"));
 			createAccountPage.clickButton();
 			Log.info("Validating Error Message for email: " + currentEmail);
 			test.info("Validating Error Message for email: " + currentEmail);
-			Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, expectedErrorMessage),
-					"Error message validation failed for email: " + currentEmail);
+			Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, data.get("Expected Result")));
 		}
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class, retryAnalyzer = RetryAnalyzer.class)
 	public void testEmailContainingSpecialCharacters(Map<String, String> data) throws Exception {
-		String[] emailsWithSpecialChars = { "Avinash.Noop_Doddu@example.com", "Avinash.Noop-Doddu@example.com",
-				"Avinash.Noop+Doddu@example.com" };
-		for (int attempt = 0; attempt < emailsWithSpecialChars.length; attempt++) {
-			String currentEmail = emailsWithSpecialChars[attempt];
+		String[] emailData = extractFieldValues(data, "Email");
+		for (int attempt = 0; attempt < emailData.length; attempt++) {
+			String currentEmail = emailData[attempt];
 			createAccountPage.navigateToCreateAccountPage();
-			createAccountPage.populateCreateAccountFields("Avinash", "NoopDoddu", currentEmail, "Password123!",
-					"Password123!");
+			createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Last Name"), currentEmail, data.get("Password"), data.get("Confirm Password"));
 			createAccountPage.clickButton();
 			Log.info("Validating Account Registration for email: " + currentEmail);
 			test.info("Validating Account Registration for email: " + currentEmail);
-			Assert.assertTrue(
-					getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, Avinash"),
-					"Account registration failed for email: " + currentEmail);
+			Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, "+data.get("Expected Result")));
 			getActionDriver().performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
 			getActionDriver().performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
 			ApiRequestHandler.deleteUser(currentEmail);
