@@ -33,10 +33,16 @@ public class LoginTest extends BaseTest {
 		test.info("Navigating to login page");
 		System.out.println("Thread ID: " + Thread.currentThread().getId());
 	}
-
+	protected void performLoginAction(Map<String, String> data) {
+		loginPage.populateLoginFields(
+			data.get("Email"), 
+			data.get("Password")
+        );
+    }
+	
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testValidLogin(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
@@ -46,7 +52,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testLoginWithInvalidCred(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
@@ -57,7 +63,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testCaseSensitivityEmail(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
@@ -71,7 +77,7 @@ public class LoginTest extends BaseTest {
 		String[] expectedResults = data.get("Expected Result").split("\n");
 		String expectedInitialType = expectedResults[0]; // "password"
 		String expectedToggledType = expectedResults[1]; // "text"
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD_VISIBILITY_TOGGLE, "type",
 				expectedInitialType), "Expected password field to be type='password' initially");
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.PASS_VIS_TOGGLE);
@@ -83,7 +89,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testSpecialCharEmail(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
@@ -94,23 +100,22 @@ public class LoginTest extends BaseTest {
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class, retryAnalyzer = RetryAnalyzer.class)
 	public void testSignInWithRememberMe(Map<String, String> data) {
 		String[] expectedResults = data.get("Expected Result").split("\n");
-		String expectedDashBoardMessage = expectedResults[0];
+		String expectedWelcomeMessage = expectedResults[0];
 		String expectedEmailText = expectedResults[1];
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.REMEMBER_ME);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
 		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
-				"Hello, " + expectedDashBoardMessage));
-		loginPage.populateDashBoardPage();
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.EMAIL_TEXT, "value", expectedEmailText),
-				"Expected Email field to be value='john.doe@example.com' after logout");
+				"Hello, " + expectedWelcomeMessage));
+		loginPage.performLogoutAction();
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.EMAIL_TEXT, "value", expectedEmailText));
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testMaxEmailAndPassLength(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
@@ -133,7 +138,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testLoginWithInvalidPassword(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
@@ -173,7 +178,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testSqlInjectionAttemptEmail(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
@@ -182,7 +187,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testXSSAttemptEmail(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
@@ -194,7 +199,7 @@ public class LoginTest extends BaseTest {
 		for (int attempt = 1; attempt <= 5; attempt++) {
 			Log.info("Attempt " + attempt + ": Logging in with incorrect credentials...");
 			test.info("Attempt " + attempt + ": Logging in with incorrect credentials...");
-			loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+			performLoginAction(data);
 			getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 			// Validate the "Incorrect email or password" error message
 			Log.info("Validating error message for attempt " + attempt);
@@ -206,7 +211,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testSqlInjectionAttemptPassword(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
@@ -216,7 +221,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testXSSAttemptPassword(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
@@ -258,7 +263,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testToolongEmailAndPasswordLength(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
@@ -267,7 +272,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void verifyResetPasswordNotAccessibleAfterLogin(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
@@ -284,7 +289,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void verifySignUpNotAccessibleAfterLogin(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
@@ -301,7 +306,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void verifyLoginPageNotAccessibleAfterLogin(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
@@ -325,7 +330,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void verifyResetPasswordTokenNotAccessibleAfterLogin(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
@@ -341,7 +346,7 @@ public class LoginTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void verifyResetPasswordTokenkeyNotAccessibleAfterLogin(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");

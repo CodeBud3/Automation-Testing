@@ -20,7 +20,7 @@ import enums.SideNavLocators.SideNavLocator;
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_TEXT, username);
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD_TEXT, password);
 	}
-	public void populateDashBoardPage() {
+	public void performLogoutAction() {
 		actionDriver.performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
 		actionDriver.performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
 	}

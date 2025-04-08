@@ -6,8 +6,6 @@ import org.testng.annotations.Test;
 import base.BaseTest;
 import pages.CreateAccountPage;
 import enums.ActionTypes.ActionType;
-import enums.SideNavLocators.SideNavLocator;
-
 import enums.CreateAccountLocatorEnum.ElementLocators;
 import enums.DashboardPageLocators.DashboardLocators;
 import utils.ApiRequestHandler;
@@ -15,7 +13,6 @@ import utils.ExcelDataProvider;
 import utils.ExtentReportManager;
 import utils.Log;
 import utils.RetryAnalyzer;
-
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -37,11 +34,19 @@ public class CreateAccountTest extends BaseTest {
 		test.info("Navigating to Creating Account Page...");
 		System.out.println("Thread ID: " + Thread.currentThread().getId());
 	}
+	protected void populateAccountFields(Map<String, String> data) {
+        createAccountPage.populateCreateAccountFields(
+            data.get("First Name"), 
+            data.get("Last Name"),
+            data.get("Email"),
+            data.get("Password"),
+            data.get("Confirm Password")
+        );
+    }
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testSuccessfulAccountCreation(Map<String, String> data) throws Exception {
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
@@ -52,8 +57,7 @@ public class CreateAccountTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testMaximumFieldLengths(Map<String, String> data) throws Exception {
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
@@ -82,8 +86,7 @@ public class CreateAccountTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testMinimumPasswordLength(Map<String, String> data) throws Exception {
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
@@ -94,8 +97,7 @@ public class CreateAccountTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testEmptyFirstName(Map<String, String> data) {
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
@@ -115,8 +117,7 @@ public class CreateAccountTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testEmailAlreadyRegistered(Map<String, String> data) {
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
@@ -125,8 +126,7 @@ public class CreateAccountTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testPasswordMismatch(Map<String, String> data) {
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
@@ -141,8 +141,7 @@ public class CreateAccountTest extends BaseTest {
 		String expectedErrorLastName = expectedResults[1];
 		String expectedErrorEmail = expectedResults[2];
 		String expectedErrorPassword = expectedResults[3];
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
@@ -160,8 +159,7 @@ public class CreateAccountTest extends BaseTest {
 		String expectedErrorLastName = expectedResults[1];
 		String expectedErrorEmail = expectedResults[2];
 		String expectedErrorPassword = expectedResults[3];
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
@@ -177,8 +175,7 @@ public class CreateAccountTest extends BaseTest {
 		String[] expectedResults = data.get("Expected Result").split("\n");
 		String expectedInitialType = expectedResults[0];
 		String expectedToggledType = expectedResults[1];
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", expectedInitialType),
 				"Expected password field to be type='password' initially");
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.PASSWORD_TOGGLE);
@@ -198,8 +195,7 @@ public class CreateAccountTest extends BaseTest {
 		String[] expectedResults = data.get("Expected Result").split("\n");
 		String expectedErrorFirstName = expectedResults[0];
 		String expectedErrorLastName = expectedResults[1];
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
@@ -209,8 +205,7 @@ public class CreateAccountTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testPasswordBelowMinimum(Map<String, String> data) {
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
@@ -223,8 +218,7 @@ public class CreateAccountTest extends BaseTest {
 		String[] expectedResults = data.get("Expected Result").split("\n");
 		String expectedErrorFirstName = expectedResults[0];
 		String expectedErrorLastName = expectedResults[1];
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
@@ -239,8 +233,7 @@ public class CreateAccountTest extends BaseTest {
 		String[] expectedResults = data.get("Expected Result").split("\n");
 		String expectedErrorFirstName = expectedResults[0];
 		String expectedErrorLastName = expectedResults[1];
-		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
-				data.get("Passward"), data.get("Confirm Passward"));
+		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
@@ -308,7 +301,7 @@ public class CreateAccountTest extends BaseTest {
 */
 //	  @Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class) 
 //	public void testWeakPassword(Map<String, String> data)  {
-//	  createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"), data.get("Passward"), data.get("Confirm Passward"));
+//	  createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Last Name"), data.get("Email"), data.get("Password"), data.get("Confirm Password"));
 //	  createAccountPage.clickButton(); Log.info("Validating Account Registration");
 //	  test.info("Validating Account Registration");
 //	  
