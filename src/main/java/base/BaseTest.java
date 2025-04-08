@@ -22,6 +22,7 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 
 import actiondriver.ActionDriver;
+import utils.ApiRequestHandler;
 import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;

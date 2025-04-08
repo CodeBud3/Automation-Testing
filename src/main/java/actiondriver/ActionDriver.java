@@ -161,7 +161,7 @@ public class ActionDriver {
 		}
 		performAction(actionType, element, null);
 	}
-	public boolean isMessageDisplayed(ElementLocator element) {
+	public boolean isElementDisplayed(ElementLocator element) {
 		Log.info("Checking if " + element.getName() + " is displayed...");
 		return isDisplayed(element.getLocator());
 	}

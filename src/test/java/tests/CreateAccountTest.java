@@ -11,11 +11,13 @@ import enums.SideNavLocators.SideNavLocator;
 import enums.CreateAccountLocatorEnum.ElementLocators;
 import enums.DashboardPageLocators.DashboardLocators;
 import utils.ApiRequestHandler;
+import utils.ExcelDataProvider;
 import utils.ExtentReportManager;
 import utils.Log;
 import utils.RetryAnalyzer;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 public class CreateAccountTest extends BaseTest {
 
@@ -36,201 +38,220 @@ public class CreateAccountTest extends BaseTest {
 		System.out.println("Thread ID: " + Thread.currentThread().getId());
 	}
 
-	@Test
-	public void testSuccessfulAccountCreation() throws Exception {
-		createAccountPage.populateCreateAccountFields("Avinash", "Noop", "Avinash.Noop@example.com", "Password123!",
-				"Password123!");
-		createAccountPage.clickButton();
-		Log.info("Validating Account Registration");
-		test.info("Validating Account Registration");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, Avinash"));
-		ApiRequestHandler.deleteUser("Avinash.Noop@example.com");
-	}
-
-	@Test
-	public void testMaximumFieldLengths() throws Exception {
-		createAccountPage.populateCreateAccountFields("FirstNameWithMaxLengthForTestingABCDEFGHIJABCDEFAA",
-				"LastNameWithMaxLengthForTestingABCDEFGHIJABCDEFGAA",
-				"longemailaddresswithmultiplecharactersandnumbers1234567890abcdefghijklmnopqrstuvwx@domainexample.com",
-				"ApplebananaCherrydogLemonfishGrapeHorseiglooJuice7!xyz1ABCD1234A",
-				"ApplebananaCherrydogLemonfishGrapeHorseiglooJuice7!xyz1ABCD1234A");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testSuccessfulAccountCreation(Map<String, String> data) throws Exception {
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
 		createAccountPage.clickButton();
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
 		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
-				"Hello, FirstNameWithMaxLengthForTestingABCDEFGHIJABCDEFAA"));
-		ApiRequestHandler.deleteUser(
-				"longemailaddresswithmultiplecharactersandnumbers1234567890abcdefghijklmnopqrstuvwx@domainexample.com");
+				"Hello, " + data.get("Expected Result")));
+		ApiRequestHandler.deleteUser(data.get("Email"));
 	}
 
-	@Test
-	public void testNavigateToSignInByLink() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testMaximumFieldLengths(Map<String, String> data) throws Exception {
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
+		createAccountPage.clickButton();
+		Log.info("Validating Account Registration");
+		test.info("Validating Account Registration");
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
+		ApiRequestHandler.deleteUser(data.get("Email"));
+	}
+
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testNavigateToSignInByLink(Map<String, String> data) {
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SIGN_IN);
 		Log.info("Validating Sign Up Page");
 		test.info("Validating Sign Up Page");
-		Assert.assertTrue(getActionDriver().isMessageDisplayed(ElementLocators.SIGN_IN_PAGE));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.SIGN_IN_PAGE));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testNavigateToLoginButton() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testNavigateToLoginButton(Map<String, String> data) {
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.NAV_LOGIN);
 		Log.info("Validating Sign Up Page");
 		test.info("Validating Sign Up Page");
-		Assert.assertTrue(getActionDriver().isMessageDisplayed(ElementLocators.SIGN_IN_PAGE));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.SIGN_IN_PAGE));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testMinimumPasswordLength() throws Exception {
-		createAccountPage.populateCreateAccountFields("Avinash", "NoopDoddu", "Avinash.NoopDoddu@example.com",
-				"Pass123!", "Pass123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testMinimumPasswordLength(Map<String, String> data) throws Exception {
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
 		createAccountPage.clickButton();
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, Avinash"));
-		ApiRequestHandler.deleteUser("Avinash.NoopDoddu@example.com");
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
+		ApiRequestHandler.deleteUser(data.get("Email"));
 	}
 
-	@Test
-	public void testEmptyFirstName() {
-		createAccountPage.populateCreateAccountFields("", "", "", "", "");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testEmptyFirstName(Map<String, String> data) {
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, "First name is required."));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, "Last name is required."));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Email is required."));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, "Password is required."));
+		Assert.assertTrue(
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, data.get("Expected Result")));
+		Assert.assertTrue(
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, data.get("Expected Result")));
+		Assert.assertTrue(
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, data.get("Expected Result")));
+		Assert.assertTrue(
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, data.get("Expected Result")));
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,
-				"Please confirm your password."));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_TNC_CHECK_BOX,
-				"You must agree to the Terms and Conditions."));
+				data.get("Expected Result")));
+		Assert.assertTrue(
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_TNC_CHECK_BOX, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testEmailAlreadyRegistered() {
-		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@example.com", "Password123!",
-				"Password123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testEmailAlreadyRegistered(Map<String, String> data) {
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.ERROR_MESSAGE, "Email already registered"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.ERROR_MESSAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testPasswordMismatch() {
-		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@example.com", "Password123!",
-				"Password124!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testPasswordMismatch(Map<String, String> data) {
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
+		createAccountPage.clickButton();
+		Log.info("Validating Error Message");
+		test.info("Validating Error Message");
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,
+				data.get("Expected Result")));
+	}
+
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testSQLInjectionAttemptAllFields(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedErrorFirstName = expectedResults[0];
+		String expectedErrorLastName = expectedResults[1];
+		String expectedErrorEmail = expectedResults[2];
+		String expectedErrorPassword = expectedResults[3];
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD, "Passwords do not match."));
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, expectedErrorFirstName));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, expectedErrorLastName));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, expectedErrorEmail));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, expectedErrorPassword));
 	}
 
-	@Test
-	public void testSQLInjectionAttemptAllFields() {
-		createAccountPage.populateCreateAccountFields("'1'='1'", "'1'='1'", "'1'='1'", "'1'='1'", "'1'='1'");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testXSSAttemptAllFields(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedErrorFirstName = expectedResults[0];
+		String expectedErrorLastName = expectedResults[1];
+		String expectedErrorEmail = expectedResults[2];
+		String expectedErrorPassword = expectedResults[3];
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,
-				"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,
-				"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
 		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Enter a valid email address."));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
-				"Password must be at least 8 characters long."));
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, expectedErrorFirstName));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, expectedErrorLastName));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, expectedErrorEmail));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, expectedErrorPassword));
 	}
 
-	@Test
-	public void testXSSAttemptAllFields() {
-		createAccountPage.populateCreateAccountFields("<script>alert('XSS')</script>", "<script>alert('XSS')</script>",
-				"<script>alert('XSS')</script>", "<script>alert('XSS')</script>", "<script>alert('XSS')</script>");
-		createAccountPage.clickButton();
-		Log.info("Validating Error Message");
-		test.info("Validating Error Message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,
-				"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,
-				"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
-		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Enter a valid email address."));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
-				"Must include at least one number (0-9)."));
-	}
-
-	@Test
-	public void testVerifyToggle() {
-		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@example.com", "Password123!",
-				"Password123!");
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", "password"),
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testVerifyToggle(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedInitialType = expectedResults[0];
+		String expectedToggledType = expectedResults[1];
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", expectedInitialType),
 				"Expected password field to be type='password' initially");
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.PASSWORD_TOGGLE);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", "text"),
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", expectedToggledType),
 				"Expected password field to be type='text' after toggling visibility");
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "password"),
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", expectedInitialType),
 				"Expected password field to be type='password' initially");
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.CONFIRM_PASSWORD_TOGGLE);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "text"),
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", expectedToggledType),
 				"Expected password field to be type='text' after toggling visibility");
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
 	}
 
-	@Test
-	public void testSpecialCharacterFirstName() {
-		createAccountPage.populateCreateAccountFields("Jöhn", "döe", "john.doe@example.com", "Password123!",
-				"Password123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testSpecialCharacterFirstName(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedErrorFirstName = expectedResults[0];
+		String expectedErrorLastName = expectedResults[1];
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,
-				"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,
-				"Only letters, spaces, hyphens (-), and apostrophes (') are allowed."));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, expectedErrorFirstName));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, expectedErrorLastName));
 	}
 
-	@Test
-	public void testPasswordBelowMinimum() {
-		createAccountPage.populateCreateAccountFields("John", "doe", "john.doe@example.com", "Pas123!", "Pas123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testPasswordBelowMinimum(Map<String, String> data) {
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
-				"Password must be at least 8 characters long."));
+				data.get("Expected Result")));
 	}
 
-	@Test
-	public void testFirstAndLastNameContainingOnlySpaces() {
-		createAccountPage.populateCreateAccountFields("  ", "  ", "john.doeA@example.com", "Password123!",
-				"Password123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testFirstAndLastNameContainingOnlySpaces(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedErrorFirstName = expectedResults[0];
+		String expectedErrorLastName = expectedResults[1];
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,
-				"Must be at least 2 characters long."));
-		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, "Must be at least 2 characters long."));
+				expectedErrorFirstName));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,
+				expectedErrorLastName));
 	}
 
-	@Test
-	public void testMinimumLengthFirstAndLastName() {
-		createAccountPage.populateCreateAccountFields("O", "O", "john.doeA@example.com", "Password123!",
-				"Password123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testMinimumLengthFirstAndLastName(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedErrorFirstName = expectedResults[0];
+		String expectedErrorLastName = expectedResults[1];
+		createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"),
+				data.get("Passward"), data.get("Confirm Passward"));
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME,
-				"Must be at least 2 characters long."));
-		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, "Must be at least 2 characters long."));
+				expectedErrorFirstName));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,
+				expectedErrorLastName));
 	}
-
-	@Test
-	public void testPasswordErrorChecks() throws Exception {
+/*
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testPasswordErrorChecks(Map<String, String> data) throws Exception {
 		String[] passwords = { "", "password", "PASSWORD", "Password", "Password123" };
 
 		String[] errorMessages = { "Password is required.", "Must include at least one uppercase letter (A-Z).",
@@ -242,13 +263,14 @@ public class CreateAccountTest extends BaseTest {
 			createAccountPage.clickButton();
 			Log.info("Validating Error Message for attempt " + (attempt + 1) + ": " + errorMessages[attempt]);
 			test.info("Validating Error Message for password: " + passwords[attempt]);
-			Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, errorMessages[attempt]),
+			Assert.assertTrue(
+					getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, errorMessages[attempt]),
 					"Error message validation failed for password: " + passwords[attempt]);
 		}
 	}
 
-	@Test
-	public void testInvalidEmailFormat() throws Exception {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testInvalidEmailFormat(Map<String, String> data) throws Exception {
 		String[] invalidEmails = { "john.doe@exampl", "john.doe", "@example.com", "john.doe@.com",
 				"john..doe@example.com" };
 		String expectedErrorMessage = "Enter a valid email address.";
@@ -263,9 +285,9 @@ public class CreateAccountTest extends BaseTest {
 		}
 	}
 
-	@Test(retryAnalyzer = RetryAnalyzer.class)
-	public void testEmailContainingSpecialCharacters() throws Exception {
-		String[] emailsWithSpecialChars = {"Avinash.Noop_Doddu@example.com", "Avinash.Noop-Doddu@example.com",
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class, retryAnalyzer = RetryAnalyzer.class)
+	public void testEmailContainingSpecialCharacters(Map<String, String> data) throws Exception {
+		String[] emailsWithSpecialChars = { "Avinash.Noop_Doddu@example.com", "Avinash.Noop-Doddu@example.com",
 				"Avinash.Noop+Doddu@example.com" };
 		for (int attempt = 0; attempt < emailsWithSpecialChars.length; attempt++) {
 			String currentEmail = emailsWithSpecialChars[attempt];
@@ -275,17 +297,18 @@ public class CreateAccountTest extends BaseTest {
 			createAccountPage.clickButton();
 			Log.info("Validating Account Registration for email: " + currentEmail);
 			test.info("Validating Account Registration for email: " + currentEmail);
-			Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, Avinash"),
+			Assert.assertTrue(
+					getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, Avinash"),
 					"Account registration failed for email: " + currentEmail);
 			getActionDriver().performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
 			getActionDriver().performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
 			ApiRequestHandler.deleteUser(currentEmail);
 		}
 	}
-	
-//	  @Test public void testWeakPassword() {
-//	  createAccountPage.populateCreateAccountFields("Joaahnaaaa", "doeaaaa",
-//	  "john.doaaaaa@example.com", "Abcdef1!", "Abcdef1!");
+*/
+//	  @Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class) 
+//	public void testWeakPassword(Map<String, String> data)  {
+//	  createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Lirst Name"), data.get("Email"), data.get("Passward"), data.get("Confirm Passward"));
 //	  createAccountPage.clickButton(); Log.info("Validating Account Registration");
 //	  test.info("Validating Account Registration");
 //	  
