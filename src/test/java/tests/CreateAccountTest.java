@@ -8,6 +8,7 @@ import pages.CreateAccountPage;
 import enums.ActionTypes.ActionType;
 import enums.CreateAccountLocatorEnum.ElementLocators;
 import enums.DashboardPageLocators.DashboardLocators;
+import enums.SideNavLocators.SideNavLocator;
 import utils.ApiRequestHandler;
 import utils.ExcelDataProvider;
 import utils.ExtentReportManager;
@@ -242,7 +243,7 @@ public class CreateAccountTest extends BaseTest {
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME,
 				expectedErrorLastName));
 	}
-/*
+
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testPasswordErrorChecks(Map<String, String> data) throws Exception {
 		String[] passwords = { "", "password", "PASSWORD", "Password", "Password123" };
@@ -298,7 +299,7 @@ public class CreateAccountTest extends BaseTest {
 			ApiRequestHandler.deleteUser(currentEmail);
 		}
 	}
-*/
+
 //	  @Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class) 
 //	public void testWeakPassword(Map<String, String> data)  {
 //	  createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Last Name"), data.get("Email"), data.get("Password"), data.get("Confirm Password"));
