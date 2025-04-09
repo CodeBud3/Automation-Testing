@@ -38,7 +38,9 @@ public class LoginPageLocatorEnum {
 		PASSWORD_VISIBILITY_TOGGLE("Password Visibility Toggle Text",
 				AttributeHelper.getElementByAttribute("input", "field-password")),
 		FORGOT_PASSWORD_PAGE("Forgot Password Page", AttributeHelper.getElementByAttribute("div", "forgot-password-card-title")),
+		GOOGLE_EMAIL("Google Email Text Box", By.xpath("//*[@id=\"identifierId\"]")),
 		GOOGLE_SIGN_IN("Google Sign In page", By.xpath("//*[@id=\"headingText\"]/span")),
+		MICROSOFT_EMAIL("Microsoft Email Text Box", By.xpath("//input[@id='i0116']")),
 		MICROSOFT_SIGN_IN("Microsoft Sign In page", By.xpath("//*[@id=\"loginHeader\"]/div"));
 
 		private final String name;

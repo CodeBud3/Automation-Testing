@@ -13,11 +13,9 @@ import utils.RetryAnalyzer;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-
 import enums.ActionTypes.ActionType;
 import enums.DashboardPageLocators.DashboardLocators;
 import enums.LoginPageLocatorEnum.ElementLocators;
-import enums.SideNavLocators.SideNavLocator;
 
 public class LoginTest extends BaseTest {
 	// mvn test -Dtest=LoginTest
@@ -35,294 +33,278 @@ public class LoginTest extends BaseTest {
 		test.info("Navigating to login page");
 		System.out.println("Thread ID: " + Thread.currentThread().getId());
 	}
-
+	protected void performLoginAction(Map<String, String> data) {
+		loginPage.populateLoginFields(
+			data.get("Email"), 
+			data.get("Password")
+        );
+    }
+	
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testValidLogin(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, "+data.get("Expected Result")));
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, "+data.get("Expected Result")));
 	}
-	
+
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testLoginWithInvalidCred(Map<String, String> data) {
-		loginPage.populateLoginFields(data.get("Email"), data.get("Password"));
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
-		Assert.assertTrue(getActionDriver().isMessageDisplayed(ElementLocators.SIGN_IN_FORM_CONTAINER));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.SIGN_IN_FORM_CONTAINER));
 		Assert.assertTrue(
 				getActionDriver().verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testCaseSensitivityEmail() {
-		loginPage.populateLoginFields("JOHN.DOE@EXAMPLE.COM", "Password123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testCaseSensitivityEmail(Map<String, String> data) {
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
 	}
 
-	@Test
-	public void testPassVisToggle() {
-		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD_VISIBILITY_TOGGLE, "type", "password"),
-				"Expected password field to be type='password' initially");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testPassVisToggle(Map<String, String> data) {
+		// Split the expected result into two parts: password and text
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedInitialType = expectedResults[0]; // "password"
+		String expectedToggledType = expectedResults[1]; // "text"
+		performLoginAction(data);
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD_VISIBILITY_TOGGLE, "type",
+				expectedInitialType), "Expected password field to be type='password' initially");
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.PASS_VIS_TOGGLE);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD_VISIBILITY_TOGGLE, "type", "text"),
-				"Expected password field to be type='text' after toggling visibility");
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD_VISIBILITY_TOGGLE, "type",
+				expectedToggledType), "Expected password field to be type='text' after toggling visibility");
 		Log.info("Validating text");
 		test.info("Validating text");
 	}
 
-	@Test
-	public void testSpecialCharEmail() {
-		loginPage.populateLoginFields("john.doe+test@example.com", "Password123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testSpecialCharEmail(Map<String, String> data) {
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
 	}
 
-	@Test(retryAnalyzer = RetryAnalyzer.class)
-	public void testSignInWithRememberMe() {
-		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class, retryAnalyzer = RetryAnalyzer.class)
+	public void testSignInWithRememberMe(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedWelcomeMessage = expectedResults[0];
+		String expectedEmailText = expectedResults[1];
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.REMEMBER_ME);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
-		getActionDriver().performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
-		getActionDriver().performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.EMAIL_TEXT, "value", "john.doe@example.com"),
-				"Expected password field to be type='text' after toggling visibility");
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + expectedWelcomeMessage));
+		loginPage.performLogoutAction();
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.EMAIL_TEXT, "value", expectedEmailText));
 	}
 
-	@Test
-	public void testMaxEmailAndPassLength() {
-		loginPage.populateLoginFields(
-				"averylongemailaddresswithmultiplecharactersandrandomtexttotestvalidationpurpose@exampledomainfor.com",
-				"A1b2C3d4E5f6G7h8I9j0K!L@M#N$O%P^Q&R*S(T)U_V+W=X-Y[Z]{a}b|c~d:e;f");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testMaxEmailAndPassLength(Map<String, String> data) {
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, FirstNameJonathanAlexanderMaximillianChristopherAn"));
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
 	}
 
-	@Test
-	public void testLoginWithEmptyCred() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testLoginWithEmptyCred(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedEmailErrorMessage = expectedResults[0];
+		String expectedPasswordErrorMessage = expectedResults[1];
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.EMAIL_MESSAGE, "Email is required."));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.PASSWORD_MESSAGE, "Password is required."));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.EMAIL_MESSAGE, expectedEmailErrorMessage));
+		Assert.assertTrue(
+				getActionDriver().verifyMessage(ElementLocators.PASSWORD_MESSAGE, expectedPasswordErrorMessage));
 	}
 
-	@Test
-	public void testLoginWithInvalidPassword() {
-		loginPage.populateLoginFields("john.doe@example.com", "Password124!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testLoginWithInvalidPassword(Map<String, String> data) {
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
 		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
+				getActionDriver().verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testNavSignUpPage() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testNavSignUpPage(Map<String, String> data) {
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.NAV_SIGN_UP);
 		Log.info("Validating messages on the registration page");
 		test.info("Validating messages on the registration page");
-		Assert.assertTrue(getActionDriver().isMessageDisplayed(ElementLocators.REGISTRATION_PAGE));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.REGISTRATION_PAGE, "Create an account"));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.REGISTRATION_PAGE));
+		Assert.assertTrue(
+				getActionDriver().verifyMessage(ElementLocators.REGISTRATION_PAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void clickSignUpButton() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testClickSignUpButton(Map<String, String> data) {
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SIGN_UP);
 		Log.info("Validating messages on the registration page");
 		test.info("Validating messages on the registration page");
-		Assert.assertTrue(getActionDriver().isMessageDisplayed(ElementLocators.REGISTRATION_PAGE));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.REGISTRATION_PAGE, "Create an account"));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.REGISTRATION_PAGE));
+		Assert.assertTrue(
+				getActionDriver().verifyMessage(ElementLocators.REGISTRATION_PAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testNavForgotPassword() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testNavForgotPassword(Map<String, String> data) {
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.FORGOT_PASSWORD);
 		Log.info("Validating messages on the ForgotPassword page");
 		test.info("Validating messages on the ForgotPassword page");
-		Assert.assertTrue(getActionDriver().isMessageDisplayed(ElementLocators.FORGOT_PASSWORD_PAGE));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.FORGOT_PASSWORD_PAGE, "Forgot password?"));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.FORGOT_PASSWORD_PAGE));
+		Assert.assertTrue(
+				getActionDriver().verifyMessage(ElementLocators.FORGOT_PASSWORD_PAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testSqlInjectionAttemptEmail() {
-		loginPage.populateLoginFields("'1'='1'", "Password123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testSqlInjectionAttemptEmail(Map<String, String> data) {
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.EMAIL_MESSAGE, "Enter a valid email address."));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.EMAIL_MESSAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testXSSAttemptEmail() {
-		loginPage.populateLoginFields("<script>alert('XSS')</script>", "Password123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testXSSAttemptEmail(Map<String, String> data) {
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.EMAIL_MESSAGE, "Enter a valid email address."));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.EMAIL_MESSAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testMultipleFailedSignin() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testMultipleFailedSignin(Map<String, String> data) {
 		for (int attempt = 1; attempt <= 5; attempt++) {
 			Log.info("Attempt " + attempt + ": Logging in with incorrect credentials...");
 			test.info("Attempt " + attempt + ": Logging in with incorrect credentials...");
-			loginPage.populateLoginFields("john.doe@example.com", "Password124!");
+			performLoginAction(data);
 			getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 			// Validate the "Incorrect email or password" error message
 			Log.info("Validating error message for attempt " + attempt);
 			test.info("Validating error message for attempt " + attempt);
 			Assert.assertTrue(
-					getActionDriver().verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
+					getActionDriver().verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, data.get("Expected Result")));
 		}
 	}
 
-	@Test
-	public void testSqlInjectionAttemptPassword() {
-		loginPage.populateLoginFields("john.doe@example.com", "'1'='1'");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testSqlInjectionAttemptPassword(Map<String, String> data) {
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
 		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
+				getActionDriver().verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testXSSAttemptPassword() {
-		loginPage.populateLoginFields("john.doe@example.com", "<script>alert('XSS')</script>");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testXSSAttemptPassword(Map<String, String> data) {
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
 		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, "Incorrect email or password."));
+				getActionDriver().verifyMessage(ElementLocators.SIGN_IN_FORM_MESSAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testNavigateToGooleAuth() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testNavigateToGooleAuth(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedSignInTitle = expectedResults[0];
+		String expectedEmailTextlabel = expectedResults[1];
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.GOOGLE_AUTH);
 		Log.info("Validating Google Sign In Page");
 		test.info("Validating Microsoft Sign In Page");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.GOOGLE_SIGN_IN, "Sign in"));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.GOOGLE_SIGN_IN));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.GOOGLE_SIGN_IN, expectedSignInTitle));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.GOOGLE_EMAIL));
+		Assert.assertTrue(
+				getActionDriver().verifyAttribute(ElementLocators.GOOGLE_EMAIL, "type", expectedEmailTextlabel),
+				"Expected Email field to be type='email' after Navigating to Google Login Page");
 	}
 
-	@Test
-	public void testNavigateToMicrosoftAuth() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testNavigateToMicrosoftAuth(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedSignInTitle = expectedResults[0];
+		String expectedEmailTextlabel = expectedResults[1];
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.MICROSOFT_AUTH);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.MICROSOFT_SIGN_IN, "Sign in"));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.MICROSOFT_SIGN_IN));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.MICROSOFT_SIGN_IN, expectedSignInTitle));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.MICROSOFT_EMAIL));
+		Assert.assertTrue(
+				getActionDriver().verifyAttribute(ElementLocators.MICROSOFT_EMAIL, "type", expectedEmailTextlabel),
+				"Expected Email field to be type='email' after Navigating to Microsoft Login Page");
 	}
 
-	@Test
-	public void testToolongEmailAndPasswordLength() {
-		loginPage.populateLoginFields(
-				"aaverylongemailaddresswithmultiplecharactersandrandomtexttotestvalidationpurpose@exampledomainfor.com",
-				"A1b2C3d4E5f6G7h8I9j0K!L@M#N$O%P^Q&R*S(T)U_V+W=X-Y[Z]{a}b|c~d:e;fa");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testToolongEmailAndPasswordLength(Map<String, String> data) {
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
-		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.EMAIL_MESSAGE, "Email cannot exceed 100 characters."));
-	}
-	
-	@Test
-	public void verifyResetPasswordNotAccessibleAfterLogin() {
-		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
-		Log.info("Validating Successful Sign in");
-		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
-		String baseUrl = ConfigReader.getProperty("url");
-		Log.info("navigating to reset password");
-		String resetPasswordUrl = baseUrl + "/reset-password";
-		getDriver().navigate().to(resetPasswordUrl);
-		//Assert.assertFalse(getActionDriver().isDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
-	}
-	@Test
-	public void verifySignUpNotAccessibleAfterLogin() {
-		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
-		Log.info("Validating Successful Sign in");
-		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
-		String baseUrl = ConfigReader.getProperty("url");
-		Log.info("navigating to sing up page");
-		String singUpUrl = baseUrl + "/signup";
-		getDriver().navigate().to(singUpUrl);
-		//Assert.assertFalse(getActionDriver().isDisplayed(ElementLocators.CREATE_ACCOUNT.getLocator()));
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
-	}
-	
-	@Test
-	public void verifyLoginPageNotAccessibleAfterLogin() {
-		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
-		Log.info("Validating Successful Sign in");
-		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
-		getDriver().navigate().to(ConfigReader.getProperty("url"));
-		//Assert.assertFalse(getActionDriver().isDisplayed(ElementLocators.LOGIN.getLocator()));
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.EMAIL_MESSAGE, data.get("Expected Result")));
 	}
 
-	@Test	
-	public void verifyDashoardPageNotAccessibleBeforeLogin() {
-		String baseUrl = ConfigReader.getProperty("url");
-		Log.info("Navigating to Dashboard Page");
-		String dashboardUrl = baseUrl + "/dashboard";
-		getDriver().navigate().to(dashboardUrl);
-		//Assert.assertFalse(getActionDriver().isDisplayed(ElementLocators.LOGOUT.getLocator()));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.LOGIN, "Sign in"));
-	}
-	@Test
-	public void verifyResetPasswordTokenNotAccessibleAfterLogin() {
-		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void verifyResetPasswordTokenNotAccessibleAfterLogin(Map<String, String> data) {
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
 		String baseUrl = ConfigReader.getProperty("url");
 		String resetPasswordkeyUrl = baseUrl + "/reset-password?token=333";
 		getDriver().navigate().to(resetPasswordkeyUrl);
-		//Assert.assertFalse(getActionDriver().isDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
-        Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
+		// Assert.assertFalse(getActionDriver().isElementDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
 	}
-	
-	@Test
-	public void verifyResetPasswordTokenkeyNotAccessibleAfterLogin() {
-		loginPage.populateLoginFields("john.doe@example.com", "Password123!");
+
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void verifyResetPasswordTokenkeyNotAccessibleAfterLogin(Map<String, String> data) {
+		performLoginAction(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
 		String baseUrl = ConfigReader.getProperty("url");
 		String token = ConfigReader.getProperty("ResetPasswordUserToken");
 		String resetPasswordkeyUrl = baseUrl + "/reset-password?token=" + token;
 		getDriver().navigate().to(resetPasswordkeyUrl);
-		//Assert.assertFalse(getActionDriver().isDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
-        Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
+		// Assert.assertFalse(getActionDriver().isElementDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
 	}
-	
-	
-	
-	
-	
-//	@Test
-//	public void testSignInWithGoogleAuth() {
+
+//	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+//	public void testSignInWithGoogleAuth(Map<String, String> data) {
 //		// Click the Google Auth button
 //		Log.info("Logging in with Google Auth...");
 //		test.info("Logging in with Google Auth...");
@@ -356,8 +338,8 @@ public class LoginTest extends BaseTest {
 //		test.info("Successfully validated Google Auth login and logged out.");
 //	}
 //
-//	@Test
-//	public void testSignInWithMicroSoftAuth() {
+//	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+//	public void testSignInWithMicroSoftAuth(Map<String, String> data) {
 //
 //		// Click the Microsoft Auth button
 //		Log.info("Logging in with Microsoft Auth...");
@@ -400,5 +382,4 @@ public class LoginTest extends BaseTest {
 //		Log.info("Successfully validated Microsoft Auth login and logged out.");
 //		test.info("Successfully validated Microsoft Auth login and logged out.");
 //	}
-
 }

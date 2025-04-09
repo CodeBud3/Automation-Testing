@@ -19,10 +19,6 @@ public class ForgotPasswordPage {
 		driver.get(ConfigReader.getProperty("url") + "/forgot-password");
 	}
 
-	public void populateForgotPageEmailFields(String email) {
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_FIELD, email);
-	}
-
 	public void populatePasswordRestFields(String password, String confirmpassword) {
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, confirmpassword);
@@ -31,7 +27,11 @@ public class ForgotPasswordPage {
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_FIELD, username);
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
 	}
-
+	public void performResetPassword() {
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.PASSWORD_RESET);
+		actionDriver.performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
+	}
+	
 	// Locators
 	public void resetPasswordLink() {
 		// Fetch the base URL and token2 from ConfigReader

@@ -16,8 +16,8 @@ public class LogoutPageLocatorEnum {
 
 		// Text Fields (from EnterText)
 		EMAIL_TEXT("Email Text Box", AttributeHelper.getElementByAttribute("input", "field-email")),
-		PASSWORD_TEXT("Password Text Box", AttributeHelper.getElementByAttribute("input", "field-password"));
-
+		PASSWORD_TEXT("Password Text Box", AttributeHelper.getElementByAttribute("input", "field-password")),
+		DASHBOARD_WELCOME_MESSAGE("Welcome message", By.xpath("//*[@id=\"root\"]/div/div/div/main/main/h1[1]"));
 
 
 		private final String name;
