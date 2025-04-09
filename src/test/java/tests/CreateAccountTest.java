@@ -102,23 +102,30 @@ public class CreateAccountTest extends BaseTest {
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
-	public void testEmptyFirstName(Map<String, String> data) {
+	public void testEmptyAllFields(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedErrorFirstName = expectedResults[0];
+		String expectedErrorLastName = expectedResults[1];
+		String expectedErrorEmail = expectedResults[2];
+		String expectedErrorPassword = expectedResults[3];
+		String expectedErrorConfirmPassword = expectedResults[4];
+		String expectedErrorTermAndCondition = expectedResults[5];
 		populateAccountFields(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.CREATE_ACCOUNT);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, data.get("Expected Result")));
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, expectedErrorFirstName));
 		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, data.get("Expected Result")));
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, expectedErrorLastName));
 		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, data.get("Expected Result")));
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, expectedErrorEmail));
 		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, data.get("Expected Result")));
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, expectedErrorPassword));
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,
-				data.get("Expected Result")));
+				expectedErrorConfirmPassword));
 		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_TNC_CHECK_BOX, data.get("Expected Result")));
+				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_TNC_CHECK_BOX, expectedErrorTermAndCondition));
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
@@ -169,8 +176,7 @@ public class CreateAccountTest extends BaseTest {
 		createAccountPage.clickButton();
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, expectedErrorFirstName));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_FIRST_NAME, expectedErrorFirstName));
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_LAST_NAME, expectedErrorLastName));
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, expectedErrorEmail));
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, expectedErrorPassword));
@@ -308,7 +314,7 @@ public class CreateAccountTest extends BaseTest {
 			ApiRequestHandler.deleteUser(currentEmail);
 		}
 	}
-
+	
 //	  @Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class) 
 //	public void testWeakPassword(Map<String, String> data)  {
 //	  createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Last Name"), data.get("Email"), data.get("Password"), data.get("Confirm Password"));

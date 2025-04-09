@@ -47,7 +47,7 @@ public class LoginTest extends BaseTest {
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
 		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
-				"Hello, " + data.get("Expected Result")));
+				"Hello, "+data.get("Expected Result")));
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
@@ -268,64 +268,6 @@ public class LoginTest extends BaseTest {
 		Log.info("Validating Sign in error message");
 		test.info("Validating Sign in error message");
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.EMAIL_MESSAGE, data.get("Expected Result")));
-	}
-
-	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
-	public void verifyResetPasswordNotAccessibleAfterLogin(Map<String, String> data) {
-		performLoginAction(data);
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
-		Log.info("Validating Successful Sign in");
-		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
-				"Hello, " + data.get("Expected Result")));
-		String baseUrl = ConfigReader.getProperty("url");
-		Log.info("navigating to reset password");
-		String resetPasswordUrl = baseUrl + "/reset-password";
-		getDriver().navigate().to(resetPasswordUrl);
-		// Assert.assertFalse(getActionDriver().isElementDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
-				"Hello, " + data.get("Expected Result")));
-	}
-
-	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
-	public void verifySignUpNotAccessibleAfterLogin(Map<String, String> data) {
-		performLoginAction(data);
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
-		Log.info("Validating Successful Sign in");
-		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
-				"Hello, " + data.get("Expected Result")));
-		String baseUrl = ConfigReader.getProperty("url");
-		Log.info("navigating to sing up page");
-		String singUpUrl = baseUrl + "/signup";
-		getDriver().navigate().to(singUpUrl);
-		// Assert.assertFalse(getActionDriver().isElementDisplayed(ElementLocators.CREATE_ACCOUNT.getLocator()));
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
-				"Hello, " + data.get("Expected Result")));
-	}
-
-	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
-	public void verifyLoginPageNotAccessibleAfterLogin(Map<String, String> data) {
-		performLoginAction(data);
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
-		Log.info("Validating Successful Sign in");
-		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
-				"Hello, " + data.get("Expected Result")));
-		getDriver().navigate().to(ConfigReader.getProperty("url"));
-		// Assert.assertFalse(getActionDriver().isElementDisplayed(ElementLocators.LOGIN.getLocator()));
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
-				"Hello, " + data.get("Expected Result")));
-	}
-
-	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
-	public void verifyDashoardPageNotAccessibleBeforeLogin(Map<String, String> data) {
-		String baseUrl = ConfigReader.getProperty("url");
-		Log.info("Navigating to Dashboard Page");
-		String dashboardUrl = baseUrl + "/dashboard";
-		getDriver().navigate().to(dashboardUrl);
-		// Assert.assertFalse(getActionDriver().isElementDisplayed(ElementLocators.LOGOUT.getLocator()));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.LOGIN, data.get("Expected Result")));
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)

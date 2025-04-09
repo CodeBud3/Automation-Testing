@@ -6,14 +6,16 @@ import org.testng.annotations.Test;
 import base.BaseTest;
 import enums.ActionTypes.ActionType;
 import enums.DashboardPageLocators.DashboardLocators;
+import utils.ConfigReader;
+import utils.ExcelDataProvider;
 import utils.ExtentReportManager;
 import utils.Log;
 import utils.RetryAnalyzer;
 import pages.LogoutPage;
 import enums.LogoutPageLocatorEnum.ElementLocators;
 import enums.SideNavLocators.SideNavLocator;
-
 import java.lang.reflect.Method;
+import java.util.Map;
 
 
 public class LogoutTest extends BaseTest {
@@ -34,17 +36,78 @@ public class LogoutTest extends BaseTest {
 		System.out.println("Thread ID: " + Thread.currentThread().getId());
 	}
 	
-	@Test(retryAnalyzer = RetryAnalyzer.class)
-	public void testLogoutPage() {
-		logoutPage.populateLoginFields("john.doe@example.com", "Password123!");
+	protected void populateLoginFields(Map<String, String> data){
+		logoutPage.populateLoginFields(data.get("Email"), data.get("Password"));
+	}
+
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class, retryAnalyzer = RetryAnalyzer.class)
+	public void testLogoutPage(Map<String, String>data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedDashboardMessgae = expectedResults[0];
+		String expectedSignInPageTitle = expectedResults[1];
+		populateLoginFields(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, john"));
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, "+expectedDashboardMessgae));
 		getActionDriver().performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
 		getActionDriver().performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
 		Log.info("Validating Successful Logout");
 		test.info("Validating Successful Logout");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, expectedSignInPageTitle));
 	}
-}
+
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void verifyResetPasswordPageNotAccessableAfterLogin(Map<String, String> data) {
+		populateLoginFields(data);
+		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		Log.info("Validating Successful Sign in");
+		test.info("Validating Successful Sign in");
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, "+data.get("Expected Result")));
+		String baseUrl = ConfigReader.getProperty("url");
+		Log.info("navigating to reset password");
+		String resetPasswordUrl = baseUrl + "/reset-password";
+		getDriver().navigate().to(resetPasswordUrl);
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, "+data.get("Expected Result")));
+	}
+
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void verifySignUpNotAccessibleAfterLogin(Map<String, String> data) {
+		populateLoginFields(data);
+		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		Log.info("Validating Successful Sign in");
+		test.info("Validating Successful Sign in");
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
+		String baseUrl = ConfigReader.getProperty("url");
+		Log.info("navigating to sing up page");
+		String singUpUrl = baseUrl + "/signup";
+		getDriver().navigate().to(singUpUrl);
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
+	}
+
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void verifyLoginPageNotAccessibleAfterLogin(Map<String, String> data) {
+		populateLoginFields(data);
+		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
+		Log.info("Validating Successful Sign in");
+		test.info("Validating Successful Sign in");
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
+		getDriver().navigate().to(ConfigReader.getProperty("url"));
+		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+				"Hello, " + data.get("Expected Result")));
+	}
+
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void verifyDashoardPageNotAccessibleBeforeLogin(Map<String, String> data) {
+		String baseUrl = ConfigReader.getProperty("url");
+		Log.info("Navigating to Dashboard Page");
+		String dashboardUrl = baseUrl + "/dashboard";
+		getDriver().navigate().to(dashboardUrl);
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, data.get("Expected Result")));
+	}
+}	

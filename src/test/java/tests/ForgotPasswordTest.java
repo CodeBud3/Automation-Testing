@@ -5,12 +5,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import base.BaseTest;
 import pages.ForgotPasswordPage;
-import utils.ConfigReader;
+import utils.ExcelDataProvider;
 import utils.ExtentReportManager;
 import utils.Log;
 import utils.RetryAnalyzer;
-
 import java.lang.reflect.Method;
+import java.util.Map;
 import enums.ActionTypes.ActionType;
 import enums.ForgotPasswordLocators.ElementLocators;
 import enums.SideNavLocators.SideNavLocator;
@@ -18,6 +18,9 @@ import enums.SideNavLocators.SideNavLocator;
 public class ForgotPasswordTest extends BaseTest {
 	// mvn test -Dtest=ForgotPasswordTest
 	private ForgotPasswordPage forgotPasswordPage;
+	private String[] extractFieldValues(Map<String, String> data, String fieldName) {
+        return data.getOrDefault(fieldName, "").split("\n");
+    }
 
 	@BeforeMethod
 	public void setupPage(Method method) {
@@ -31,171 +34,176 @@ public class ForgotPasswordTest extends BaseTest {
 		System.out.println("Thread ID: " + Thread.currentThread().getId());
 	}
 
-	@Test
-	public void testSignUpButton() {
+	protected void populatePasswordRestFields(Map<String, String> data) {
+		forgotPasswordPage.populatePasswordRestFields(
+            data.get("Password"),
+            data.get("Confirm Password")
+        );
+    }
+	
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testSignUpButton(Map<String, String> data) {
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SIGN_UP);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.CREATE_ACCOUNT_PAGE, "Create an account"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.CREATE_ACCOUNT_PAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testLoginPageLink() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testLoginPageLink(Map<String, String> data) {
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN_PAGE);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testEmailContainingSpecialCharacters() throws Exception {
-		forgotPasswordPage.populateForgotPageEmailFields("Avinash.Noop+Doddu@example.com");
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testEmptyEmailField(Map<String, String> data) {
+		getActionDriver().performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_FIELD,data.get("Email"));
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.PASSWORD_RESET);
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
+		Log.info("Validating Error Message");
+		test.info("Validating Error Message");
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, data.get("Expected Result")));
+	}
+
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testInvalidEmailFormat(Map<String, String> data) {
+		getActionDriver().performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_FIELD,data.get("Email"));
+		getActionDriver().performAction(ActionType.CLICK, ElementLocators.PASSWORD_RESET);
+		Log.info("Validating Error Message");
+		test.info("Validating Error Message");
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, data.get("Expected Result")));
+	}
+
+	
+	
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testValidEmailFormat(Map<String, String> data) {
+		String[] emailData = extractFieldValues(data, "Email");
+		for (int attempt = 0; attempt < emailData.length; attempt++) {
+			String currentEmail = emailData[attempt];
+		forgotPasswordPage.navigateToForgotPasswordPage();
+		getActionDriver().performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_FIELD,currentEmail);
+		forgotPasswordPage.performResetPassword();
 		Log.info("Navigating to Sign in Page");
 		test.info("Navigating to Sign in Page");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, data.get("Expected Result")));
+		}
 	}
-
-	@Test
-	public void testEmptyEmailField() {
-		forgotPasswordPage.populateForgotPageEmailFields("");
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.PASSWORD_RESET);
-		Log.info("Validating Error Message");
-		test.info("Validating Error Message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Email is required."));
-	}
-
-	@Test
-	public void testInvalidEmailFormat() {
-		forgotPasswordPage.populateForgotPageEmailFields("john.doe@exampl");
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.PASSWORD_RESET);
-		Log.info("Validating Error Message");
-		test.info("Validating Error Message");
-		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, "Enter a valid email address."));
-	}
-
-	@Test
-	public void testResetPasswordPage() {
+	
+	
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testResetPasswordPage(Map<String, String> data) {
 		forgotPasswordPage.resetPasswordLink();
-		forgotPasswordPage.populatePasswordRestFields("Password123!", "Password123!");
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
+		populatePasswordRestFields(data);
+		forgotPasswordPage.performResetPassword();
 		Log.info("Navigating to Registration Page");
 		test.info("Navigating to Registration Page");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testSignUpPasswordResetPage() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testSignUpPasswordResetPage(Map<String, String> data) {
 		forgotPasswordPage.resetPasswordLink();
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SIGN_UP);
 		Log.info("Navigating to Registration Page");
 		test.info("Navigating to Registration Page");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.CREATE_ACCOUNT_PAGE, "Create an account"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.CREATE_ACCOUNT_PAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testLoginPasswordResetPageLink() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testLoginPasswordResetPageLink(Map<String, String> data) {
 		forgotPasswordPage.resetPasswordLink();
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN_PAGE);
 		Log.info("Navigating to Sign in Page");
 		test.info("Navigating to Sign in Page");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testMinimumPasswordLength() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testMinimumPasswordLength(Map<String, String> data) {
 		forgotPasswordPage.resetPasswordLink();
-		forgotPasswordPage.populatePasswordRestFields("Pass123!", "Pass123!");
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
+		populatePasswordRestFields(data);
+		forgotPasswordPage.performResetPassword();
 		Log.info("Navigating to Sign in Page");
 		test.info("Navigating to Sign in Page");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testEmptyPasswordField() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testEmptyPasswordField(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedPasswordError = expectedResults[0];
+		String expectedCONFPasswordError = expectedResults[1];
 		forgotPasswordPage.resetPasswordLink();
 		Log.info("Navigating to Reset Password Page...");
 		test.info("Navigating to Reset Password Page...");
-		forgotPasswordPage.populatePasswordRestFields("", "");
+		populatePasswordRestFields(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
-
-		Assert.assertTrue(
-				getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, "Password is required."));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,
-				"Please confirm your password."));
+		Log.info("Validating Error Message");
+		test.info("Validating Error Message");
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, expectedPasswordError));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,expectedCONFPasswordError));
 	}
 
-	@Test
-	public void testVerifyToggle() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testVerifyToggle(Map<String, String> data) {
+		String[] expectedResults = data.get("Expected Result").split("\n");
+		String expectedInitialType = expectedResults[0];
+		String expectedToggledType = expectedResults[1];
 		forgotPasswordPage.resetPasswordLink();
-		forgotPasswordPage.populatePasswordRestFields("Password123!", "Password123!");
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", "password"),
-				"Expected password field to be type='password' initially");
+		populatePasswordRestFields(data);
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", expectedInitialType));
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.PASSWORD_TOGGLE);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", "text"),
-				"Expected password field to be type='text' after toggling visibility");
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "password"),
-				"Expected password field to be type='password' initially");
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", expectedToggledType));
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", expectedInitialType));
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.CONFIRM_PASSWORD_TOGGLE);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", "text"),
-				"Expected password field to be type='text' after toggling visibility");
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", expectedToggledType));
 	}
 
-	@Test
-	public void testPasswordMismatch() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testPasswordMismatch(Map<String, String> data) {
 		forgotPasswordPage.resetPasswordLink();
-		forgotPasswordPage.populatePasswordRestFields("Password123!", "password124!");
+		populatePasswordRestFields(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD,
-				"Passwords do not match."));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_CONFIRM_PASSWORD, data.get("Expected Result")));
 	}
 
-	@Test
-	public void testPasswordTooShort() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testPasswordTooShort(Map<String, String> data) {
 		forgotPasswordPage.resetPasswordLink();
-		forgotPasswordPage.populatePasswordRestFields("Pas123!", "Pas124!");
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
-		Log.info("Validating Error Message");
-		test.info("Validating Error Message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
-				"Password must be at least 8 characters long."));
-	}
-
-	@Test
-	public void testSQLInjectionAttemptPassword() {
-		forgotPasswordPage.resetPasswordLink();
-		forgotPasswordPage.populatePasswordRestFields("'1'='1'", "'1'='1'");
+		populatePasswordRestFields(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
-				"Password must be at least 8 characters long."));
+				data.get("Expected Result")));
+	}
+
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	public void testSQLInjectionAttemptPassword(Map<String, String> data) {
+		forgotPasswordPage.resetPasswordLink();
+		populatePasswordRestFields(data);
+		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
+		Log.info("Validating Error Message");
+		test.info("Validating Error Message");
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
+				data.get("Expected Result")));
 	}
 	
-	@Test(retryAnalyzer = RetryAnalyzer.class)
-	public void testPasswordReset() {
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class, retryAnalyzer = RetryAnalyzer.class)
+	public void testPasswordReset(Map<String, String> data) {
 		forgotPasswordPage.resetPasswordLink();
-		String baseUrl = ConfigReader.getProperty("url");
-		getActionDriver().performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, "Password123!");
-		getActionDriver().performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, "Password123!");
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SAVE_PASSWORD);
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
-		
-		String loginUrl = baseUrl + "/login";
-		getDriver().navigate().to(loginUrl);
-		forgotPasswordPage.populateLoginFields("john.doe@example.com", "Password123!");
+		populatePasswordRestFields(data);
+		forgotPasswordPage.performResetPassword();
+		forgotPasswordPage.populateLoginFields(data.get("Email"), data.get("Password"));
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
 		Log.info("Navigating to Sign in Page");
 		test.info("Navigating to Sign in Page");
 		getActionDriver().performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
 		getActionDriver().performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, "Sign in to your account"));
+		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, data.get("Expected Result")));
 	}
 }
