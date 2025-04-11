@@ -26,11 +26,5 @@ jobs:
           distribution: "temurin"
           java-version: "21"
 
-      - name: Set up Chrome
-        uses: browser-actions/setup-chrome@v1
-
-      - name: Verify Chrome Installed
-        run: google-chrome --version
-
       - name: Run Tests with Maven
-        run: mvn clean test -Dtestng.xml
+        run: mvn clean test -Dtestng.xml -DHEADLESS_MODE=true
