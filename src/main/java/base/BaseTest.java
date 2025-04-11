@@ -1,6 +1,8 @@
 package base;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +52,7 @@ public class BaseTest {
 	}
 
 	@BeforeMethod
-	public void setUp() {
+	public void setUp() throws IOException {
 		initDriver();
 		configureBrowser();
 		int explicitWait = ConfigReader.getIntProperty("explicitWait");
@@ -101,14 +103,17 @@ public class BaseTest {
 		LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
 	}
 
-	private void initDriver() {
+	private void initDriver() throws IOException {
 		String browser = ConfigReader.getProperty("browser");
 		Log.info("Initializing the driver...");
 		ChromeOptions options = new ChromeOptions();
 		if (ConfigReader.getBooleanProperty("HEADLESS_MODE")) {
+			Path tempDir = Files.createTempDirectory("chrome-user-data");
+			options.addArguments("--user-data-dir=" + tempDir.toAbsolutePath().toString());
 			options.addArguments("--headless=new"); // or "--headless"
 			options.addArguments("--no-sandbox");
 			options.addArguments("--disable-dev-shm-usage");
+			options.addArguments("--disable-gpu");
 		}		
 		switch (browser.toLowerCase()) {
 		case "chrome": {
