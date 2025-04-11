@@ -14,15 +14,14 @@ jobs:
   test-suite:
     runs-on: ubuntu-latest
 
-    env: # 👈 This makes them available to your Java code
+    env:
+      MAVEN_OPTS: "-Xmx2g"
       DELETEUSERTOKEN: ${{ secrets.DELETEUSERTOKEN }}
       RESETPASSWORDUSERTOKEN: ${{ secrets.RESETPASSWORDUSERTOKEN }}
 
     permissions:
       contents: read
       actions: read
-    env:
-      MAVEN_OPTS: "-Xmx2g"
 
     steps:
       - name: Checkout Code
