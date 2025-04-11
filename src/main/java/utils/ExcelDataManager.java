@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -33,8 +34,12 @@ public class ExcelDataManager {
                 for (int i = 1; i <= sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
                     if (row == null) continue;
-
-                    String functionName = row.getCell(0).getStringCellValue();
+//                    Log.info("sheetName"+sheetName+i);
+                    Cell cellValue = row.getCell(0);
+                    if (cellValue == null) {
+                    	break;
+                    }
+                    String functionName = cellValue.getStringCellValue();
                     Map<String, String> data = new HashMap<>();
 
                     for (int j = 1; j < headerRow.getLastCellNum(); j++) {
@@ -49,11 +54,14 @@ public class ExcelDataManager {
             }
 
         } catch (IOException e) {
+//        	Log.info("failedToReadExcel");
             e.printStackTrace();
         }
     }
 
     public static Object[][] getTestData(String sheetName, String functionName) {
+//    	Log.info("sheetName-"+sheetName);
+//    	Log.info("functionName-"+functionName);
         String mapKey = sheetName + "." + functionName;
         List<Map<String, String>> dataList = cachedData.get(mapKey);
         if (dataList == null) return new Object[0][0];

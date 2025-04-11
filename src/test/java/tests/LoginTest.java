@@ -10,7 +10,6 @@ import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;
 import utils.RetryAnalyzer;
-
 import java.lang.reflect.Method;
 import java.util.Map;
 import enums.ActionTypes.ActionType;
