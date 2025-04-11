@@ -7,7 +7,7 @@ import java.util.Properties;
 public class ConfigReader {
     private static Properties properties;
     private static final String CONFIG_FILE_PATH = "src/main/resources/config.properties";
-    private static final String SECRETS_FILE_PATH = "src/main/resources/secret1.properties";
+    private static final String SECRETS_FILE_PATH = "src/main/resources/secret.properties";
     // Private constructor to prevent instantiation
     private ConfigReader() {}
 
@@ -34,11 +34,20 @@ public class ConfigReader {
      * @return Property value
      */
     public static String getProperty(String key) {
+    	// system property (i.e. passed via -D)
     	String envValue = System.getProperty(key);
-    	Log.info("Env Property for "+key+" = "+envValue);
-		if (envValue != null) {
-			return envValue.trim();
-		}
+    
+    	if (envValue == null) {
+            // Environment variable (i.e. from GitHub Actions)
+            envValue = System.getenv(key);
+            Log.info("Env Variable for " + key + " = " + envValue);
+        }
+    	
+    	if (envValue != null && !envValue.trim().isEmpty()) {
+            return envValue.trim();
+        }
+
+    	// Fall back to properties file
         String value = properties.getProperty(key);
         if (value == null || value.trim().isEmpty()) {
             throw new RuntimeException("Property \"" + key + "\" not found in config.properties");
