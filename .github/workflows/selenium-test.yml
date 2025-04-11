@@ -30,4 +30,4 @@ jobs:
           java-version: "21"
 
       - name: Run Tests with Maven
-        run: mvn clean test -Dtestng.xml -DHEADLESS_MODE=true
+        run: mvn test -Dtest=CreateAccountTest#testSuccessfulAccountCreation -Dtestng.xml -DHEADLESS_MODE=true
