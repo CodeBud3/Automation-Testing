@@ -106,13 +106,7 @@ public class BaseTest {
 		String browser = ConfigReader.getProperty("browser");
 		Log.info("Initializing the driver...");
 		ChromeOptions options = new ChromeOptions();
-		try {
-		    // Always use a unique user data directory for parallel runs
-		    Path tempDir = Files.createTempDirectory("chrome-user-data");
-		    options.addArguments("--user-data-dir=" + tempDir.toAbsolutePath().toString());
-		} catch (IOException e) {
-		    e.printStackTrace(); // Consider logging this more gracefully
-		}
+
 		if (ConfigReader.getBooleanProperty("HEADLESS_MODE")) {
 			options.addArguments("--headless=new"); // or "--headless"
 			options.addArguments("--no-sandbox");
