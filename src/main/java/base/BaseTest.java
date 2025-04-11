@@ -25,7 +25,6 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 
 import actiondriver.ActionDriver;
-import utils.ApiRequestHandler;
 import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;
@@ -52,7 +51,7 @@ public class BaseTest {
 	}
 
 	@BeforeMethod
-	public void setUp() throws IOException {
+	public void setUp() {
 		initDriver();
 		configureBrowser();
 		int explicitWait = ConfigReader.getIntProperty("explicitWait");
@@ -103,13 +102,18 @@ public class BaseTest {
 		LockSupport.parkNanos(TimeUnit.SECONDS.toNanos(seconds));
 	}
 
-	private void initDriver() throws IOException {
+	private void initDriver() {
 		String browser = ConfigReader.getProperty("browser");
 		Log.info("Initializing the driver...");
 		ChromeOptions options = new ChromeOptions();
+		try {
+		    // Always use a unique user data directory for parallel runs
+		    Path tempDir = Files.createTempDirectory("chrome-user-data");
+		    options.addArguments("--user-data-dir=" + tempDir.toAbsolutePath().toString());
+		} catch (IOException e) {
+		    e.printStackTrace(); // Consider logging this more gracefully
+		}
 		if (ConfigReader.getBooleanProperty("HEADLESS_MODE")) {
-			Path tempDir = Files.createTempDirectory("chrome-user-data");
-			options.addArguments("--user-data-dir=" + tempDir.toAbsolutePath().toString());
 			options.addArguments("--headless=new"); // or "--headless"
 			options.addArguments("--no-sandbox");
 			options.addArguments("--disable-dev-shm-usage");
