@@ -34,10 +34,3 @@ jobs:
 
       - name: Run Tests with Maven
         run: mvn clean test -Dtestng.xml
-
-      - name: Archive Test Reports
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-results
-          path: target/surefire-reports/
