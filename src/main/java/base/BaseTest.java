@@ -112,6 +112,15 @@ public class BaseTest {
 			options.addArguments("--no-sandbox");
 			options.addArguments("--disable-dev-shm-usage");
 			options.addArguments("--disable-gpu");
+			options.addArguments("--remote-allow-origins=*");
+			options.addArguments("--disable-extensions");
+			options.addArguments("--disable-background-networking");
+			options.addArguments("--disable-default-apps");
+			options.addArguments("--disable-sync");
+			options.addArguments("--metrics-recording-only");
+			options.addArguments("--mute-audio");
+			options.addArguments("--no-first-run");
+			options.addArguments("--safebrowsing-disable-auto-update");
 		}		
 		switch (browser.toLowerCase()) {
 		case "chrome": {
