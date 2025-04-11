@@ -8,6 +8,7 @@ on:
 
 jobs:
   test-suite:
+    name: Run Selenium Tests
     runs-on: ubuntu-latest
 
     env:
