@@ -38,10 +38,8 @@ public class ConfigReader {
     	String envValue = System.getProperty(key);
     
     	if (envValue == null) {
-            // Environment variable (i.e. from GitHub Actions)
-    		
+            // Environment variable (i.e. from GitHub Actions)    		
             envValue = System.getenv(key);
-            Log.info("Env Variable for " + key + " = " + envValue);
         }
     	
     	if (envValue != null && !envValue.trim().isEmpty()) {
