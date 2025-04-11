@@ -8,6 +8,7 @@ import java.util.concurrent.locks.LockSupport;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -103,10 +104,15 @@ public class BaseTest {
 	private void initDriver() {
 		String browser = ConfigReader.getProperty("browser");
 		Log.info("Initializing the driver...");
-
+		ChromeOptions options = new ChromeOptions();
+		if (ConfigReader.getBooleanProperty("HEADLESS_MODE")) {
+			options.addArguments("--headless=new"); // or "--headless"
+			options.addArguments("--no-sandbox");
+			options.addArguments("--disable-dev-shm-usage");
+		}		
 		switch (browser.toLowerCase()) {
 		case "chrome": {
-			driverInstance.set(new ChromeDriver());
+			driverInstance.set(new ChromeDriver(options));
 			break;
 		}
 		case "firefox": {

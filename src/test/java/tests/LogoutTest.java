@@ -33,7 +33,7 @@ public class LogoutTest extends BaseTest {
 		logoutPage.navigateToLogoutPage();
 		Log.info("Navigating to Creating Account Page...");
 		test.info("Navigating to Creating Account Page...");
-		System.out.println("Thread ID: " + Thread.currentThread().getId());
+		Log.info("Running " + testMethodName + " on Thread ID: " + Thread.currentThread().getId());
 	}
 	
 	protected void populateLoginFields(Map<String, String> data){

@@ -36,7 +36,7 @@ public class ForgotPasswordPage {
 	public void resetPasswordLink() {
 		// Fetch the base URL and token2 from ConfigReader
 		String baseUrl = ConfigReader.getProperty("url"); // Ensure this is defined in config.properties
-		String token = ConfigReader.getProperty("ResetPasswordUserToken"); // Ensure this is defined in secret.properties
+		String token = ConfigReader.getProperty("RESETPASSWORDUSERTOKEN"); // Ensure this is defined in secret.properties
 
 		// Construct the full URL with the token
 		String resetPasswordUrl = baseUrl + "/reset-password?token=" + token;

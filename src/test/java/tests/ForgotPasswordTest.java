@@ -31,7 +31,7 @@ public class ForgotPasswordTest extends BaseTest {
 		test.info("Navigating to Forgot Password Page");
 		forgotPasswordPage = new ForgotPasswordPage(getDriver(), getActionDriver());
 		forgotPasswordPage.navigateToForgotPasswordPage();
-		System.out.println("Thread ID: " + Thread.currentThread().getId());
+		Log.info("Running " + testMethodName + " on Thread ID: " + Thread.currentThread().getId());
 	}
 
 	protected void populatePasswordRestFields(Map<String, String> data) {

@@ -31,7 +31,7 @@ public class LoginTest extends BaseTest {
 		loginPage = new LoginPage(getDriver(), getActionDriver());
 		Log.info("Navigating to login page");
 		test.info("Navigating to login page");
-		System.out.println("Thread ID: " + Thread.currentThread().getId());
+		Log.info("Running " + testMethodName + " on Thread ID: " + Thread.currentThread().getId());
 	}
 	protected void performLoginAction(Map<String, String> data) {
 		loginPage.populateLoginFields(

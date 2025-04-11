@@ -7,7 +7,7 @@ import java.util.Properties;
 public class ConfigReader {
     private static Properties properties;
     private static final String CONFIG_FILE_PATH = "src/main/resources/config.properties";
-    private static final String SECRETS_FILE_PATH = "src/main/resources/secret.properties";
+    private static final String SECRETS_FILE_PATH = "src/main/resources/secret1.properties";
     // Private constructor to prevent instantiation
     private ConfigReader() {}
 
@@ -23,17 +23,21 @@ public class ConfigReader {
         try (FileInputStream fileInputStream = new FileInputStream(SECRETS_FILE_PATH)) {
             properties.load(fileInputStream);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load configuration file: " + SECRETS_FILE_PATH, e);
+        	System.out.println("Secrets file not found. Continuing without it.");
         }
     }
 
     /**
-     * Fetches the property value from config.properties
+     * Fetches the property value from env variables, if not present fallback to config.properties
      *
      * @param key Property key
      * @return Property value
      */
     public static String getProperty(String key) {
+    	String envValue = System.getProperty(key);
+		if (envValue != null) {
+			return envValue.trim();
+		}
         String value = properties.getProperty(key);
         if (value == null || value.trim().isEmpty()) {
             throw new RuntimeException("Property \"" + key + "\" not found in config.properties");
