@@ -13,6 +13,11 @@ concurrency:
 jobs:
   test-suite:
     runs-on: ubuntu-latest
+
+    env: # 👈 This makes them available to your Java code
+      DELETEUSERTOKEN: ${{ secrets.DELETEUSERTOKEN }}
+      RESETPASSWORDUSERTOKEN: ${{ secrets.RESETPASSWORDUSERTOKEN }}
+
     permissions:
       contents: read
       actions: read
