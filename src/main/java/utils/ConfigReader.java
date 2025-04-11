@@ -39,8 +39,9 @@ public class ConfigReader {
     
     	if (envValue == null) {
             // Environment variable (i.e. from GitHub Actions)
-    		Log.info("Env Variable for " + key + " = " + envValue);
+    		
             envValue = System.getenv(key);
+            Log.info("Env Variable for " + key + " = " + envValue);
         }
     	
     	if (envValue != null && !envValue.trim().isEmpty()) {
