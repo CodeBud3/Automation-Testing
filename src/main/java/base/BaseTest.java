@@ -108,6 +108,7 @@ public class BaseTest {
 		ChromeOptions options = new ChromeOptions();
 		Log.info("HEADLESS_MODE = " + ConfigReader.getBooleanProperty("HEADLESS_MODE"));
 		if (ConfigReader.getBooleanProperty("HEADLESS_MODE")) {
+			Log.info("Adding chromeOptions");
 			options.addArguments("--headless=new"); // or "--headless"
 			options.addArguments("--no-sandbox");
 			options.addArguments("--disable-dev-shm-usage");

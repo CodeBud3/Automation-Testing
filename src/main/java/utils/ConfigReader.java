@@ -35,6 +35,7 @@ public class ConfigReader {
      */
     public static String getProperty(String key) {
     	String envValue = System.getProperty(key);
+    	Log.info("Env Property for "+key+" = "+envValue);
 		if (envValue != null) {
 			return envValue.trim();
 		}
