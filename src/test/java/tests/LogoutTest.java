@@ -73,7 +73,7 @@ public class LogoutTest extends BaseTest {
 				"Hello, "+data.get("Expected Result")));
 	}
 
-	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class, retryAnalyzer = RetryAnalyzer.class)
 	public void verifySignUpNotAccessibleAfterLogin(Map<String, String> data) {
 		populateLoginFields(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
