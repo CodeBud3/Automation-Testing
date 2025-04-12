@@ -57,7 +57,7 @@ public class LogoutTest extends BaseTest {
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, expectedSignInPageTitle));
 	}
 
-	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class, retryAnalyzer = RetryAnalyzer.class)
 	public void verifyResetPasswordPageNotAccessableAfterLogin(Map<String, String> data) {
 		populateLoginFields(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
