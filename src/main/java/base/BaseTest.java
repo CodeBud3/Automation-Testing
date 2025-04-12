@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
@@ -106,6 +108,14 @@ public class BaseTest {
 		String browser = ConfigReader.getProperty("browser");
 		Log.info("Initializing the driver...");
 		ChromeOptions options = new ChromeOptions();
+		
+		Map<String, Object> prefs = new HashMap<>();
+		prefs.put("profile.password_manager_leak_detection", false);
+		prefs.put("credentials_enable_service", false);
+		prefs.put("profile.password_manager_enabled", false);
+		options.setExperimentalOption("prefs", prefs);
+
+		options.setExperimentalOption("prefs", prefs);
 		if (ConfigReader.getBooleanProperty("HEADLESS_MODE")) {
 			options.addArguments("--headless=new"); // or "--headless"
 			options.addArguments("--no-sandbox");
@@ -120,7 +130,7 @@ public class BaseTest {
 			options.addArguments("--mute-audio");
 			options.addArguments("--no-first-run");
 			options.addArguments("--safebrowsing-disable-auto-update");
-		}		
+		}
 		switch (browser.toLowerCase()) {
 		case "chrome": {
 			driverInstance.set(new ChromeDriver(options));
