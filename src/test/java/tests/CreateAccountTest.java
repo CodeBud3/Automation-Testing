@@ -3,6 +3,8 @@ package tests;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
 import base.BaseTest;
 import pages.CreateAccountPage;
 import enums.ActionTypes.ActionType;
@@ -37,7 +39,8 @@ public class CreateAccountTest extends BaseTest {
 		createAccountPage.navigateToCreateAccountPage();
 		Log.info("Navigating to Creating Account Page...");
 		test.info("Navigating to Creating Account Page...");
-		System.out.println("Thread ID: " + Thread.currentThread().getId());
+		Log.info("Running " + testMethodName + " on Thread ID: " + Thread.currentThread().getId());
+
 	}
 	protected void populateAccountFields(Map<String, String> data) {
         createAccountPage.populateCreateAccountFields(
@@ -50,26 +53,32 @@ public class CreateAccountTest extends BaseTest {
     }
 	
 	
-	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class, retryAnalyzer = RetryAnalyzer.class)
 	public void testSuccessfulAccountCreation(Map<String, String> data) throws Exception {
+		SoftAssert softAssert = new SoftAssert();
 		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+		softAssert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
 				"Hello, " + data.get("Expected Result")));
 		ApiRequestHandler.deleteUser(data.get("Email"));
+		softAssert.assertAll();
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testMaximumFieldLengths(Map<String, String> data) throws Exception {
+		SoftAssert softAssert = new SoftAssert();
 		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+		softAssert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
 				"Hello, " + data.get("Expected Result")));
+		
 		ApiRequestHandler.deleteUser(data.get("Email"));
+		softAssert.assertAll();
+		
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
@@ -92,13 +101,15 @@ public class CreateAccountTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testMinimumPasswordLength(Map<String, String> data) throws Exception {
+		SoftAssert softAssert = new SoftAssert();
 		populateAccountFields(data);
 		createAccountPage.clickButton();
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
-		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
+		softAssert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
 				"Hello, " + data.get("Expected Result")));
 		ApiRequestHandler.deleteUser(data.get("Email"));
+		softAssert.assertAll();
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
@@ -302,16 +313,21 @@ public class CreateAccountTest extends BaseTest {
 	public void testEmailContainingSpecialCharacters(Map<String, String> data) throws Exception {
 		String[] emailData = extractFieldValues(data, "Email");
 		for (int attempt = 0; attempt < emailData.length; attempt++) {
+			SoftAssert softAssert = new SoftAssert();
 			String currentEmail = emailData[attempt];
 			createAccountPage.navigateToCreateAccountPage();
 			createAccountPage.populateCreateAccountFields(data.get("First Name"), data.get("Last Name"), currentEmail, data.get("Password"), data.get("Confirm Password"));
 			createAccountPage.clickButton();
 			Log.info("Validating Account Registration for email: " + currentEmail);
 			test.info("Validating Account Registration for email: " + currentEmail);
-			Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, "+data.get("Expected Result")));
-			getActionDriver().performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
-			getActionDriver().performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
+			boolean isValid = getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE, "Hello, "+data.get("Expected Result"));
+			softAssert.assertTrue(isValid);
+			if (isValid) {
+				getActionDriver().performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
+				getActionDriver().performAction(ActionType.CLICK, SideNavLocator.LOGOUT);
+			}
 			ApiRequestHandler.deleteUser(currentEmail);
+			softAssert.assertAll();
 		}
 	}
 	

@@ -33,7 +33,7 @@ public class LogoutTest extends BaseTest {
 		logoutPage.navigateToLogoutPage();
 		Log.info("Navigating to Creating Account Page...");
 		test.info("Navigating to Creating Account Page...");
-		System.out.println("Thread ID: " + Thread.currentThread().getId());
+		Log.info("Running " + testMethodName + " on Thread ID: " + Thread.currentThread().getId());
 	}
 	
 	protected void populateLoginFields(Map<String, String> data){
@@ -57,7 +57,7 @@ public class LogoutTest extends BaseTest {
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, expectedSignInPageTitle));
 	}
 
-	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class, retryAnalyzer = RetryAnalyzer.class)
 	public void verifyResetPasswordPageNotAccessableAfterLogin(Map<String, String> data) {
 		populateLoginFields(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);
@@ -73,7 +73,7 @@ public class LogoutTest extends BaseTest {
 				"Hello, "+data.get("Expected Result")));
 	}
 
-	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
+	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class, retryAnalyzer = RetryAnalyzer.class)
 	public void verifySignUpNotAccessibleAfterLogin(Map<String, String> data) {
 		populateLoginFields(data);
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.LOGIN);

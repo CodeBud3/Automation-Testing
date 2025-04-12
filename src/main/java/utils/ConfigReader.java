@@ -23,17 +23,30 @@ public class ConfigReader {
         try (FileInputStream fileInputStream = new FileInputStream(SECRETS_FILE_PATH)) {
             properties.load(fileInputStream);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load configuration file: " + SECRETS_FILE_PATH, e);
+        	System.out.println("Secrets file not found. Continuing without it.");
         }
     }
 
     /**
-     * Fetches the property value from config.properties
+     * Fetches the property value from env variables, if not present fallback to config.properties
      *
      * @param key Property key
      * @return Property value
      */
     public static String getProperty(String key) {
+    	// system property (i.e. passed via -D)
+    	String envValue = System.getProperty(key);
+    
+    	if (envValue == null) {
+            // Environment variable (i.e. from GitHub Actions)    		
+            envValue = System.getenv(key);
+        }
+    	
+    	if (envValue != null && !envValue.trim().isEmpty()) {
+            return envValue.trim();
+        }
+
+    	// Fall back to properties file
         String value = properties.getProperty(key);
         if (value == null || value.trim().isEmpty()) {
             throw new RuntimeException("Property \"" + key + "\" not found in config.properties");

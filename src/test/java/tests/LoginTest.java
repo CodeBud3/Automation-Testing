@@ -31,7 +31,7 @@ public class LoginTest extends BaseTest {
 		loginPage = new LoginPage(getDriver(), getActionDriver());
 		Log.info("Navigating to login page");
 		test.info("Navigating to login page");
-		System.out.println("Thread ID: " + Thread.currentThread().getId());
+		Log.info("Running " + testMethodName + " on Thread ID: " + Thread.currentThread().getId());
 	}
 	protected void performLoginAction(Map<String, String> data) {
 		loginPage.populateLoginFields(
@@ -295,7 +295,7 @@ public class LoginTest extends BaseTest {
 		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
 				"Hello, " + data.get("Expected Result")));
 		String baseUrl = ConfigReader.getProperty("url");
-		String token = ConfigReader.getProperty("ResetPasswordUserToken");
+		String token = ConfigReader.getProperty("RESETPASSWORDUSERTOKEN");
 		String resetPasswordkeyUrl = baseUrl + "/reset-password?token=" + token;
 		getDriver().navigate().to(resetPasswordkeyUrl);
 		// Assert.assertFalse(getActionDriver().isElementDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));

@@ -1,13 +1,18 @@
 package base;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -22,7 +27,6 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.MediaEntityBuilder;
 
 import actiondriver.ActionDriver;
-import utils.ApiRequestHandler;
 import utils.ConfigReader;
 import utils.ExtentReportManager;
 import utils.Log;
@@ -103,10 +107,32 @@ public class BaseTest {
 	private void initDriver() {
 		String browser = ConfigReader.getProperty("browser");
 		Log.info("Initializing the driver...");
+		ChromeOptions options = new ChromeOptions();
+		
+		Map<String, Object> prefs = new HashMap<>();
+		prefs.put("profile.password_manager_leak_detection", false);
+		prefs.put("credentials_enable_service", false);
+		prefs.put("profile.password_manager_enabled", false);
+		options.setExperimentalOption("prefs", prefs);
 
+		if (ConfigReader.getBooleanProperty("HEADLESS_MODE")) {
+			options.addArguments("--headless=new"); // or "--headless"
+			options.addArguments("--no-sandbox");
+			options.addArguments("--disable-dev-shm-usage");
+			options.addArguments("--disable-gpu");
+			options.addArguments("--remote-allow-origins=*");
+			options.addArguments("--disable-extensions");
+			options.addArguments("--disable-background-networking");
+			options.addArguments("--disable-default-apps");
+			options.addArguments("--disable-sync");
+			options.addArguments("--metrics-recording-only");
+			options.addArguments("--mute-audio");
+			options.addArguments("--no-first-run");
+			options.addArguments("--safebrowsing-disable-auto-update");
+		}
 		switch (browser.toLowerCase()) {
 		case "chrome": {
-			driverInstance.set(new ChromeDriver());
+			driverInstance.set(new ChromeDriver(options));
 			break;
 		}
 		case "firefox": {
