@@ -115,7 +115,6 @@ public class BaseTest {
 		prefs.put("profile.password_manager_enabled", false);
 		options.setExperimentalOption("prefs", prefs);
 
-		options.setExperimentalOption("prefs", prefs);
 		if (ConfigReader.getBooleanProperty("HEADLESS_MODE")) {
 			options.addArguments("--headless=new"); // or "--headless"
 			options.addArguments("--no-sandbox");

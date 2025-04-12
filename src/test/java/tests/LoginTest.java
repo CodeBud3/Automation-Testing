@@ -295,7 +295,7 @@ public class LoginTest extends BaseTest {
 		Assert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
 				"Hello, " + data.get("Expected Result")));
 		String baseUrl = ConfigReader.getProperty("url");
-		String token = ConfigReader.getProperty("ResetPasswordUserToken");
+		String token = ConfigReader.getProperty("RESETPASSWORDUSERTOKEN");
 		String resetPasswordkeyUrl = baseUrl + "/reset-password?token=" + token;
 		getDriver().navigate().to(resetPasswordkeyUrl);
 		// Assert.assertFalse(getActionDriver().isElementDisplayed(ElementLocators.SAVE_PASSWORD.getLocator()));
