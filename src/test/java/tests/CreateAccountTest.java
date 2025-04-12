@@ -199,16 +199,12 @@ public class CreateAccountTest extends BaseTest {
 		String expectedInitialType = expectedResults[0];
 		String expectedToggledType = expectedResults[1];
 		populateAccountFields(data);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", expectedInitialType),
-				"Expected password field to be type='password' initially");
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", expectedInitialType));
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.PASSWORD_TOGGLE);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", expectedToggledType),
-				"Expected password field to be type='text' after toggling visibility");
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", expectedInitialType),
-				"Expected password field to be type='password' initially");
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", expectedToggledType));
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", expectedInitialType));
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.CONFIRM_PASSWORD_TOGGLE);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", expectedToggledType),
-				"Expected password field to be type='text' after toggling visibility");
+		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", expectedToggledType));
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
 	}
