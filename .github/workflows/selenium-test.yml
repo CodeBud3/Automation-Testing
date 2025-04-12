@@ -34,7 +34,7 @@ jobs:
           java-version: "21"
 
       - name: Run Tests with Maven
-        run: mvn test -Dtestng.xml -DHEADLESS_MODE=true
+        run: mvn clean test -Dsurefire.suiteXmlFiles=testng.xml -DHEADLESS_MODE=true
 
       - name: Archive Test Reports
         if: always()
