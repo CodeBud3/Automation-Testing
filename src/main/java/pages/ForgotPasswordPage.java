@@ -4,7 +4,8 @@ import org.openqa.selenium.WebDriver;
 import utils.ConfigReader;
 import actiondriver.ActionDriver;
 import enums.ActionTypes.ActionType;
-import enums.ForgotPasswordLocators.ElementLocators;
+import enums.CommonLocators.CommonPageLocators;
+import enums.ForgotPasswordLocators.ForgotPasswordPageLocators;
 
 public class ForgotPasswordPage {
 	private WebDriver driver;
@@ -20,16 +21,16 @@ public class ForgotPasswordPage {
 	}
 
 	public void populatePasswordRestFields(String password, String confirmpassword) {
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, confirmpassword);
+		actionDriver.performAction(ActionType.ENTER_TEXT, CommonPageLocators.PASSWORD_TEXT, password);
+		actionDriver.performAction(ActionType.ENTER_TEXT, CommonPageLocators.CONFIRM_PASSWORD, confirmpassword);
 	}
 	public void populateLoginFields(String username, String password) {
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_FIELD, username);
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
+		actionDriver.performAction(ActionType.ENTER_TEXT, CommonPageLocators.EMAIL_TEXT, username);
+		actionDriver.performAction(ActionType.ENTER_TEXT, CommonPageLocators.PASSWORD_TEXT, password);
 	}
 	public void performResetPassword() {
-		actionDriver.performAction(ActionType.CLICK, ElementLocators.PASSWORD_RESET);
-		actionDriver.performAction(ActionType.CLICK, ElementLocators.CONFIRM_RESET);
+		actionDriver.performAction(ActionType.CLICK, ForgotPasswordPageLocators.PASSWORD_RESET);
+		actionDriver.performAction(ActionType.CLICK, ForgotPasswordPageLocators.CONFIRM_RESET);
 	}
 	
 	// Locators

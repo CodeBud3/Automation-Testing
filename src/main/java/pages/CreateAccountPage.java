@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import utils.ConfigReader;
 import actiondriver.ActionDriver;
 import enums.ActionTypes.ActionType;
+import enums.CommonLocators.CommonPageLocators;
 import enums.CreateAccountLocatorEnum;
 
 
@@ -25,9 +26,9 @@ public class CreateAccountPage extends CreateAccountLocatorEnum {
 	public void populateCreateAccountFields(String firstname, String lastname, String email, String password, String confirmpassword) {
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.FIRST_NAME, firstname);
 		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.LAST_NAME, lastname);
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_ID, email);
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD, password);
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.CONFIRM_PASSWORD, confirmpassword);
+		actionDriver.performAction(ActionType.ENTER_TEXT, CommonPageLocators.EMAIL_TEXT, email);
+		actionDriver.performAction(ActionType.ENTER_TEXT, CommonPageLocators.PASSWORD_TEXT, password);
+		actionDriver.performAction(ActionType.ENTER_TEXT, CommonPageLocators.CONFIRM_PASSWORD, confirmpassword);
 	}
 	public void clickButton() {
 		actionDriver.performAction(ActionType.CLICK, ElementLocators.TNC_CHECK_BOX);

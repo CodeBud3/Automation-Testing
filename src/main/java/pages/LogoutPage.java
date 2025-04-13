@@ -4,10 +4,10 @@ import org.openqa.selenium.WebDriver;
 import utils.ConfigReader;
 import actiondriver.ActionDriver;
 import enums.ActionTypes.ActionType;
-import enums.LogoutPageLocatorEnum;
+import enums.CommonLocators;
 
 
-public class LogoutPage extends LogoutPageLocatorEnum {
+public class LogoutPage extends CommonLocators {
 	private WebDriver driver;
 	private ActionDriver actionDriver;
 	
@@ -23,7 +23,7 @@ public class LogoutPage extends LogoutPageLocatorEnum {
 	
 	
 	public void populateLoginFields(String email, String password) {
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_TEXT, email);
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD_TEXT, password);
+		actionDriver.performAction(ActionType.ENTER_TEXT, CommonPageLocators.EMAIL_TEXT, email);
+		actionDriver.performAction(ActionType.ENTER_TEXT, CommonPageLocators.PASSWORD_TEXT, password);
 	}
 }
