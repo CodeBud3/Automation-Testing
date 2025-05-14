@@ -9,6 +9,7 @@ import base.BaseTest;
 import pages.CreateAccountPage;
 import enums.ActionTypes.ActionType;
 import enums.CreateAccountLocatorEnum.ElementLocators;
+import enums.CommonLocators.CommonPageLocators;
 import enums.DashboardPageLocators.DashboardLocators;
 import enums.SideNavLocators.SideNavLocator;
 import utils.ApiRequestHandler;
@@ -74,8 +75,7 @@ public class CreateAccountTest extends BaseTest {
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");
 		softAssert.assertTrue(getActionDriver().verifyMessage(DashboardLocators.DASHBOARD_WELCOME_MESSAGE,
-				"Hello, " + data.get("Expected Result")));
-		
+				"Hello, " + data.get("Expected Result")));	
 		ApiRequestHandler.deleteUser(data.get("Email"));
 		softAssert.assertAll();
 		
@@ -86,8 +86,8 @@ public class CreateAccountTest extends BaseTest {
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.SIGN_IN);
 		Log.info("Validating Sign Up Page");
 		test.info("Validating Sign Up Page");
-		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.SIGN_IN_PAGE));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, data.get("Expected Result")));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(CommonPageLocators.SIGN_IN_PAGE));
+		Assert.assertTrue(getActionDriver().verifyMessage(CommonPageLocators.SIGN_IN_PAGE, data.get("Expected Result")));
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
@@ -95,8 +95,8 @@ public class CreateAccountTest extends BaseTest {
 		getActionDriver().performAction(ActionType.CLICK, ElementLocators.NAV_LOGIN);
 		Log.info("Validating Sign Up Page");
 		test.info("Validating Sign Up Page");
-		Assert.assertTrue(getActionDriver().isElementDisplayed(ElementLocators.SIGN_IN_PAGE));
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.SIGN_IN_PAGE, data.get("Expected Result")));
+		Assert.assertTrue(getActionDriver().isElementDisplayed(CommonPageLocators.SIGN_IN_PAGE));
+		Assert.assertTrue(getActionDriver().verifyMessage(CommonPageLocators.SIGN_IN_PAGE, data.get("Expected Result")));
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
@@ -199,15 +199,15 @@ public class CreateAccountTest extends BaseTest {
 		String expectedInitialType = expectedResults[0];
 		String expectedToggledType = expectedResults[1];
 		populateAccountFields(data);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", expectedInitialType),
+		Assert.assertTrue(getActionDriver().verifyAttribute(CommonPageLocators.PASSWORD_TEXT, "type", expectedInitialType),
 				"Expected password field to be type='password' initially");
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.PASSWORD_TOGGLE);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.PASSWORD, "type", expectedToggledType),
+		getActionDriver().performAction(ActionType.CLICK, CommonPageLocators.PASSWORD_VIS_TOGGLE);
+		Assert.assertTrue(getActionDriver().verifyAttribute(CommonPageLocators.PASSWORD_TEXT, "type", expectedToggledType),
 				"Expected password field to be type='text' after toggling visibility");
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", expectedInitialType),
+		Assert.assertTrue(getActionDriver().verifyAttribute(CommonPageLocators.CONFIRM_PASSWORD, "type", expectedInitialType),
 				"Expected password field to be type='password' initially");
-		getActionDriver().performAction(ActionType.CLICK, ElementLocators.CONFIRM_PASSWORD_TOGGLE);
-		Assert.assertTrue(getActionDriver().verifyAttribute(ElementLocators.CONFIRM_PASSWORD, "type", expectedToggledType),
+		getActionDriver().performAction(ActionType.CLICK, CommonPageLocators.CONFIRM_PASSWORD_VIS_TOGGLE);
+		Assert.assertTrue(getActionDriver().verifyAttribute(CommonPageLocators.CONFIRM_PASSWORD, "type", expectedToggledType),
 				"Expected password field to be type='text' after toggling visibility");
 		Log.info("Validating Account Registration");
 		test.info("Validating Account Registration");

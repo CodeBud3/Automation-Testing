@@ -3,6 +3,7 @@ package pages;
 import org.openqa.selenium.WebDriver;
 import actiondriver.ActionDriver;
 import enums.ActionTypes.ActionType;
+import enums.CommonLocators.CommonPageLocators;
 import enums.LoginPageLocatorEnum;
 import enums.SideNavLocators.SideNavLocator;
 
@@ -17,8 +18,8 @@ import enums.SideNavLocators.SideNavLocator;
 		}
 	
 	public void populateLoginFields(String username, String password) {
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.EMAIL_TEXT, username);
-		actionDriver.performAction(ActionType.ENTER_TEXT, ElementLocators.PASSWORD_TEXT, password);
+		actionDriver.performAction(ActionType.ENTER_TEXT, CommonPageLocators.EMAIL_TEXT, username);
+		actionDriver.performAction(ActionType.ENTER_TEXT, CommonPageLocators.PASSWORD_TEXT, password);
 	}
 	public void performLogoutAction() {
 		actionDriver.performAction(ActionType.CLICK, SideNavLocator.USER_PROFILE);
