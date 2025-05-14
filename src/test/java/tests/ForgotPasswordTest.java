@@ -45,7 +45,7 @@ public class ForgotPasswordTest extends BaseTest {
 	
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testSignUpButton(Map<String, String> data) {
-		getActionDriver().performAction(ActionType.CLICK, CommonPageLocators.SIGN_UP);
+		getActionDriver().performAction(ActionType.CLICK, CommonPageLocators.NAV_SIGN_UP);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
 		Assert.assertTrue(getActionDriver().verifyMessage(CommonPageLocators.SIGN_UP_PAGE, data.get("Expected Result")));
@@ -56,7 +56,7 @@ public class ForgotPasswordTest extends BaseTest {
 		getActionDriver().performAction(ActionType.CLICK, ForgotPasswordPageLocators.LOGIN_PAGE);
 		Log.info("Validating Successful Sign in");
 		test.info("Validating Successful Sign in");
-		Assert.assertTrue(getActionDriver().verifyMessage(CommonPageLocators.SIGN_UP_PAGE, data.get("Expected Result")));
+		Assert.assertTrue(getActionDriver().verifyMessage(CommonPageLocators.SIGN_IN_PAGE, data.get("Expected Result")));
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
@@ -70,11 +70,15 @@ public class ForgotPasswordTest extends BaseTest {
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testInvalidEmailFormat(Map<String, String> data) {
-		getActionDriver().performAction(ActionType.ENTER_TEXT, CommonPageLocators.EMAIL_TEXT,data.get("Email"));
+		String[] emailData = extractFieldValues(data, "Email");
+		for (int attempt = 0; attempt < emailData.length; attempt++) {
+			String currentEmail = emailData[attempt];
+		getActionDriver().performAction(ActionType.ENTER_TEXT, CommonPageLocators.EMAIL_TEXT,currentEmail);
 		getActionDriver().performAction(ActionType.CLICK, ForgotPasswordPageLocators.PASSWORD_RESET);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_EMAIL_ID, data.get("Expected Result")));
+		}
 	}
 
 	
@@ -116,7 +120,9 @@ public class ForgotPasswordTest extends BaseTest {
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
 	public void testLoginPasswordResetPageLink(Map<String, String> data) {
 		forgotPasswordPage.resetPasswordLink();
-		getActionDriver().performAction(ActionType.CLICK, CommonPageLocators.LOGIN);
+		populatePasswordRestFields(data);
+		getActionDriver().performAction(ActionType.CLICK, ForgotPasswordPageLocators.PASSWORD_RESET);
+		getActionDriver().performAction(ActionType.CLICK, ForgotPasswordPageLocators.CONFIRM_RESET);
 		Log.info("Navigating to Sign in Page");
 		test.info("Navigating to Sign in Page");
 		Assert.assertTrue(getActionDriver().verifyMessage(CommonPageLocators.SIGN_IN_PAGE, data.get("Expected Result")));
@@ -141,7 +147,7 @@ public class ForgotPasswordTest extends BaseTest {
 		Log.info("Navigating to Reset Password Page...");
 		test.info("Navigating to Reset Password Page...");
 		populatePasswordRestFields(data);
-		getActionDriver().performAction(ActionType.CLICK, ForgotPasswordPageLocators.CONFIRM_RESET);
+		getActionDriver().performAction(ActionType.CLICK, ForgotPasswordPageLocators.PASSWORD_RESET);
 		Log.info("Validating Error Message");
 		test.info("Validating Error Message");
 		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, expectedPasswordError));
@@ -174,14 +180,24 @@ public class ForgotPasswordTest extends BaseTest {
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)
-	public void testPasswordTooShort(Map<String, String> data) {
+	public void testPasswordErrorChecks(Map<String, String> data) {
+		String[] passwords = extractFieldValues(data, "Password");
+        String[] errorMessages = extractFieldValues(data, "Expected Result");
+
+        int maxAttempts = Math.min(passwords.length, errorMessages.length);
+
+        for (int attempt = 0; attempt < maxAttempts; attempt++) {
+            String currentPassword = passwords[attempt];
+            String expectedError = errorMessages[attempt];
 		forgotPasswordPage.resetPasswordLink();
-		populatePasswordRestFields(data);
+		getActionDriver().performAction(ActionType.ENTER_TEXT, CommonPageLocators.PASSWORD_TEXT, currentPassword);
 		getActionDriver().performAction(ActionType.CLICK, ForgotPasswordPageLocators.PASSWORD_RESET);
-		Log.info("Validating Error Message");
-		test.info("Validating Error Message");
-		Assert.assertTrue(getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD,
-				data.get("Expected Result")));
+		String logMessage = String.format("Validating Error Message for attempt %d: %s", attempt + 1, expectedError);
+        Log.info(logMessage);
+        test.info("Validating Error Message for password: " + currentPassword);
+        boolean isErrorValid = getActionDriver().verifyMessage(ElementLocators.VER_ERROR_PASSWORD, expectedError);
+        Assert.assertTrue(isErrorValid, "Error message validation failed for password: " + currentPassword);
+        }
 	}
 
 	@Test(dataProvider = "excelData", dataProviderClass = ExcelDataProvider.class)

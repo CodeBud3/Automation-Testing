@@ -12,7 +12,7 @@ public class DashboardPageLocators {
 		    ADD_TASK("Add Task Button", By.xpath("//button[normalize-space()='Add Task']")),
 		    TASK_TITLE("Task Enter Title", AttributeHelper.getElementByAttribute("input", "field-title")),
 		    PROFILE_EMAIL("Profile Email indication", By.xpath("//span[@class='truncate text-xs']")),
-		    DASHBOARD_WELCOME_MESSAGE("Welcome message", By.xpath("//*[@id=\"root\"]/div/div/div/main/main/h1[1]"));
+		    DASHBOARD_WELCOME_MESSAGE("Welcome message", AttributeHelper.getElementByAttribute("h1", "dashboard-header-welcome"));
 			
 			
 			

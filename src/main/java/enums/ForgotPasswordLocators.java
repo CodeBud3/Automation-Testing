@@ -9,7 +9,7 @@ public class ForgotPasswordLocators {
 	public enum ForgotPasswordPageLocators  implements ElementLocator {
 		// Buttons and Links (from ButtonType)
 		LOGIN_PAGE("Return To Login Page Link", AttributeHelper.getElementByAttribute("a", "login-link")),
-	    PASSWORD_RESET("Password Reset Button", AttributeHelper.getElementByAttribute("button", "button-reset")), // Unique ID to avoid conflict
+	    PASSWORD_RESET("Password Reset Button", AttributeHelper.getElementByAttribute("button", "button-submit")),
 	    CONFIRM_RESET("Password Reset Confirm", AttributeHelper.getElementByAttribute("button", "alert-confirm")),
 	    PASSWORD_TOGGLE("Toggle Password Button", AttributeHelper.getElementByAttribute("button", "password-visibility")),
 	    CONFIRM_PASSWORD_TOGGLE("Toggle Confirm Password Button", AttributeHelper.getElementByAttribute("button", "confirmpassword-visibility"));

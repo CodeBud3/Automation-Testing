@@ -80,10 +80,10 @@ public class LoginTest extends BaseTest {
 		String expectedInitialType = expectedResults[0]; // "password"
 		String expectedToggledType = expectedResults[1]; // "text"
 		performLoginAction(data);
-		Assert.assertTrue(getActionDriver().verifyAttribute(CommonPageLocators.PASSWORD_VIS_TOGGLE, "type",
+		Assert.assertTrue(getActionDriver().verifyAttribute(CommonPageLocators.PASSWORD_TEXT, "type",
 				expectedInitialType));
-		getActionDriver().performAction(ActionType.CLICK, CommonPageLocators.CONFIRM_PASSWORD_VIS_TOGGLE);
-		Assert.assertTrue(getActionDriver().verifyAttribute(CommonPageLocators.PASSWORD_VIS_TOGGLE, "type",
+		getActionDriver().performAction(ActionType.CLICK, CommonPageLocators.PASSWORD_VIS_TOGGLE);
+		Assert.assertTrue(getActionDriver().verifyAttribute(CommonPageLocators.PASSWORD_TEXT, "type",
 				expectedToggledType));
 		Log.info("Validating text");
 		test.info("Validating text");
